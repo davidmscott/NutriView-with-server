@@ -10,97 +10,217 @@
 			rect {
 				stroke-width: 2;
 			}
+			h2 {
+				text-align: center;
+			}
+			.centering {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+			}
+			svg {
+				border: 1px solid lightgrey;
+				border-radius: 5px;
+			}
+			form {
+				margin-top: 5px;
+			}
 		</style>
-		<script
-			src="https://code.jquery.com/jquery-3.1.1.min.js"
-			integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-			crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	</head>
 	<body>
-		<form onsubmit="event.preventDefault()">
-			<input type="text" id="search">
-			<button onclick="searchFood()"></button>
-		</form>
-		<div id="chart"></div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="centering">
+						<form class="form-inline" onsubmit="event.preventDefault()">
+							<div class="form-group">
+								<input class="form-control" placeholder="Food item" type="text" id="search">
+								<button class="btn btn-default" onclick="searchFood()">Submit</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="centering">
+						<div id="chart"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="centering">
+						<div id="chartTotal"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<script>
 
-			var dataset = [
+			var dataTotal = [
 				{ label: 'Protein', count: 1, percent: 0 },
-				{ label: 'Carb', count: 1, percent: 0 },
+				{ label: 'Carbohydrates', count: 1, percent: 0 },
 				{ label: 'Fat', count: 1, percent: 0 }
 			];
 
 			function searchFood() {
 				var search = $('#search').val();
-				console.log(search);
+				$('#search').val('');
 				$.get('/nutrients', search, function(res) {
-					console.log(res);
+
+					var dataset = [
+						{ label: 'Protein', count: 1 },
+						{ label: 'Carbohydrates', count: 1 },
+						{ label: 'Fat', count: 1 }
+					];
+
+					var foodMatch = JSON.parse(res.body).ingredients[0].parsed[0].foodMatch;
+					var quantity = JSON.parse(res.body).ingredients[0].parsed[0].quantity;
+					var measure = JSON.parse(res.body).ingredients[0].parsed[0].measure;
 					var totalDaily = JSON.parse(res.body).totalDaily;
 						dataset[0].percent = totalDaily.FAT ? totalDaily.FAT.quantity : 0;
 						dataset[1].percent = totalDaily.CHOCDF ? totalDaily.CHOCDF.quantity : 0;
 						dataset[2].percent = totalDaily.PROCNT ? totalDaily.PROCNT.quantity : 0;
-				var width = 600;
-				var height = 600;
-				var radius = Math.min(width, height) / 2;
-				var insideRadius = radius / 3;
-				var legendRectSize = 18;
-				var legendSpacing = 4;
+					var width = 400;
+					var height = 400;
+					var radius = Math.min(width, height) / 2;
+					var insideRadius = 75;
+					var legendRectSize = 18;
+					var legendSpacing = 4;
+					var foodDesc = '';
+					if (quantity) {
+						foodDesc += quantity + ' ';
+					}
+					if (measure) {
+						foodDesc += measure + ' ';
+					}
+					if (foodMatch) {
+						foodDesc += foodMatch;
+					} else {
+						foodDesc = '';
+					}
 
-				// var color = d3.scaleOrdinal(d3.schemeCategory20);
+					var color = d3.scaleOrdinal(d3.schemeCategory20);
+					// var color = d3.scaleOrdinal()
+					// 	.range(['#A60F2B', '#648C85', '#B3F2C9', '#528C18', '#C3F25C']);
 
-				var color = d3.scaleOrdinal()
-					.range(['#A60F2B', '#648C85', '#B3F2C9', '#528C18', '#C3F25C']);
+					var svg = d3.select('#chart')
+						.insert('svg',':first-child')
+						.attr('class', 'rounded')
+						.attr('width', width)
+						.attr('height', height)
+						.append('g')
+						.attr('transform', 'translate(' + (width / 2) +
+							',' + (height / 2) + ')');
 
-				var svg = d3.select('#chart')
-					.append('svg')
-					.attr('width', width)
-					.attr('height', height)
-					.append('g')
-					.attr('transform', 'translate(' + (width / 2) +
-						',' + (height / 2) + ')');
+					var arc = d3.arc()
+						.innerRadius(insideRadius)
+						.outerRadius(radius);
 
-				var arc = d3.arc()
-					.innerRadius(insideRadius)
-					.outerRadius(radius);
+					var pie = d3.pie()
+						.value(function(d) { return d.count; })
+						.sort(null);
 
-				var pie = d3.pie()
-					.value(function(d) { return d.count; })
-					.sort(null);
+					var path = svg.selectAll('path')
+						.data(pie(dataset))
+						.enter()
+						.append('path')
+						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100) + 5)(d, i); })
+						.attr('fill', function(d) {
+							return color(d.data.label);
+						});
 
-				var path = svg.selectAll('path')
-					.data(pie(dataset))
-					.enter()
-					.append('path')
-					.attr('d', function(d, i) { return arc.outerRadius(insideRadius + d.data.percent)(d, i); })
-					.attr('fill', function(d) {
-						return color(d.data.label);
-					});
+					var legend = svg.selectAll('.legend')
+						.data(color.domain())
+						.enter()
+						.append('g')
+						.attr('class', 'legend')
+						.attr('transform', function(d, i) {
+							var height = legendRectSize + legendSpacing;
+							var offset =  height * color.domain().length / 2;
+							var horz = -2 * legendRectSize;
+							var vert = i * height - offset;
+							return 'translate(' + horz + ',' + vert + ')';
+						});
 
-				var legend = svg.selectAll('.legend')
-					.data(color.domain())
-					.enter()
-					.append('g')
-					.attr('class', 'legend')
-					.attr('transform', function(d, i) {
-						var height = legendRectSize + legendSpacing;
-						var offset =  height * color.domain().length / 2;
-						var horz = -2 * legendRectSize;
-						var vert = i * height - offset;
-						return 'translate(' + horz + ',' + vert + ')';
-					});
+					legend.append('rect')
+						.attr('width', legendRectSize)
+						.attr('height', legendRectSize)
+						.style('fill', color)
+						.style('stroke', color);
 
-				legend.append('rect')
-					.attr('width', legendRectSize)
-					.attr('height', legendRectSize)
-					.style('fill', color)
-					.style('stroke', color);
+					legend.append('text')
+						.attr('x', legendRectSize + legendSpacing)
+						.attr('y', legendRectSize - legendSpacing)
+						.text(function(d) { return d; });
 
-				legend.append('text')
-					.attr('x', legendRectSize + legendSpacing)
-					.attr('y', legendRectSize - legendSpacing)
-					.text(function(d) { return d; });
+					$('#chart').prepend('<h2>' + foodDesc + '</h2>').css('textTransform', 'capitalize');
 
+					dataTotal[0].percent += dataset[0].percent;
+					dataTotal[1].percent += dataset[1].percent;
+					dataTotal[2].percent += dataset[2].percent;
+
+					$('#chartTotal').html('');
+
+					var color = d3.scaleOrdinal(d3.schemeCategory20);
+					// var color = d3.scaleOrdinal()
+					// 	.range(['#A60F2B', '#648C85', '#B3F2C9', '#528C18', '#C3F25C']);
+
+					var svg = d3.select('#chartTotal')
+						.insert('svg',':first-child')
+						.attr('class', 'rounded')
+						.attr('width', width)
+						.attr('height', height)
+						.append('g')
+						.attr('transform', 'translate(' + (width / 2) +
+							',' + (height / 2) + ')');
+
+					var arc = d3.arc()
+						.innerRadius(insideRadius)
+						.outerRadius(radius);
+
+					var pie = d3.pie()
+						.value(function(d) { return d.count; })
+						.sort(null);
+
+					var path = svg.selectAll('path')
+						.data(pie(dataTotal))
+						.enter()
+						.append('path')
+						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100) + 5)(d, i); })
+						.attr('fill', function(d) {
+							return color(d.data.label);
+						});
+
+					var legend = svg.selectAll('.legend')
+						.data(color.domain())
+						.enter()
+						.append('g')
+						.attr('class', 'legend')
+						.attr('transform', function(d, i) {
+							var height = legendRectSize + legendSpacing;
+							var offset =  height * color.domain().length / 2;
+							var horz = -2 * legendRectSize;
+							var vert = i * height - offset;
+							return 'translate(' + horz + ',' + vert + ')';
+						});
+
+					legend.append('rect')
+						.attr('width', legendRectSize)
+						.attr('height', legendRectSize)
+						.style('fill', color)
+						.style('stroke', color);
+
+					legend.append('text')
+						.attr('x', legendRectSize + legendSpacing)
+						.attr('y', legendRectSize - legendSpacing)
+						.text(function(d) { return d; });
+
+					$('#chartTotal').prepend('<h2>' + 'Total Daily Percent' + '</h2>');
 				});
 			}
 
