@@ -40,7 +40,7 @@
 						<form class="form-inline" onsubmit="event.preventDefault()">
 							<div class="form-group">
 								<input class="form-control" placeholder="Food item" type="text" id="search">
-								<button class="btn btn-default" onclick="searchFood()">Submit</button>
+								<button class="btn btn-default" onclick="searchFood()">Add Food Item</button>
 							</div>
 						</form>
 					</div>
@@ -104,7 +104,7 @@
 						foodDesc = '';
 					}
 
-					var color = d3.scaleOrdinal(d3.schemeCategory20);
+					var color = d3.scaleOrdinal(d3.schemeCategory10);
 					// var color = d3.scaleOrdinal()
 					// 	.range(['#A60F2B', '#648C85', '#B3F2C9', '#528C18', '#C3F25C']);
 
@@ -129,10 +129,55 @@
 						.data(pie(dataset))
 						.enter()
 						.append('path')
-						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100) + 5)(d, i); })
+						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100))(d, i); })
 						.attr('fill', function(d) {
 							return color(d.data.label);
 						});
+
+					svg
+						.append('circle')
+							.attr('r', insideRadius)
+							.style('opacity', 0.6)
+							.style('stroke', 'lightgrey')
+							.style('fill', 'none');
+
+					svg
+						.append('text')
+							.attr('y', insideRadius - 10)
+							.attr('x', -7)
+							.attr('fill', 'lightgrey')
+							.style('opacity', 0.6)
+							.text('0%');
+
+					svg
+						.append('circle')
+							.attr('r', insideRadius + 50)
+							.style('opacity', 0.6)
+							.style('stroke', 'lightgrey')
+							.style('fill', 'none');
+
+					svg
+						.append('text')
+							.attr('y', insideRadius + 40)
+							.attr('x', -7 * 1.5)
+							.attr('fill', 'lightgrey')
+							.style('opacity', 0.6)
+							.text('50%');
+
+					svg
+						.append('circle')
+							.attr('r', insideRadius + 100)
+							.style('opacity', 0.6)
+							.style('stroke', 'lightgrey')
+							.style('fill', 'none');
+
+					svg
+						.append('text')
+							.attr('y', insideRadius + 90)
+							.attr('x', -7 * 2)
+							.attr('fill', 'lightgrey')
+							.style('opacity', 0.6)
+							.text('100%');
 
 					var legend = svg.selectAll('.legend')
 						.data(color.domain())
@@ -166,11 +211,11 @@
 
 					$('#chartTotal').html('');
 
-					var color = d3.scaleOrdinal(d3.schemeCategory20);
+					color = d3.scaleOrdinal(d3.schemeCategory10);
 					// var color = d3.scaleOrdinal()
 					// 	.range(['#A60F2B', '#648C85', '#B3F2C9', '#528C18', '#C3F25C']);
 
-					var svg = d3.select('#chartTotal')
+					svg = d3.select('#chartTotal')
 						.insert('svg',':first-child')
 						.attr('class', 'rounded')
 						.attr('width', width)
@@ -179,24 +224,24 @@
 						.attr('transform', 'translate(' + (width / 2) +
 							',' + (height / 2) + ')');
 
-					var arc = d3.arc()
+					arc = d3.arc()
 						.innerRadius(insideRadius)
 						.outerRadius(radius);
 
-					var pie = d3.pie()
+					pie = d3.pie()
 						.value(function(d) { return d.count; })
 						.sort(null);
 
-					var path = svg.selectAll('path')
+					path = svg.selectAll('path')
 						.data(pie(dataTotal))
 						.enter()
 						.append('path')
-						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100) + 5)(d, i); })
+						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100))(d, i); })
 						.attr('fill', function(d) {
 							return color(d.data.label);
 						});
 
-					var legend = svg.selectAll('.legend')
+					legend = svg.selectAll('.legend')
 						.data(color.domain())
 						.enter()
 						.append('g')
@@ -209,6 +254,52 @@
 							return 'translate(' + horz + ',' + vert + ')';
 						});
 
+					svg
+						.append('circle')
+							.attr('r', insideRadius)
+							.style('opacity', 0.6)
+							.style('stroke', 'lightgrey')
+							.style('fill', 'none');
+
+					svg
+						.append('text')
+							.attr('y', insideRadius - 10)
+							.attr('x', -7)
+							.attr('fill', 'lightgrey')
+							.style('opacity', 0.6)
+							.text('0%');
+
+
+					svg
+						.append('circle')
+							.attr('r', insideRadius + 50)
+							.style('opacity', 0.6)
+							.style('stroke', 'lightgrey')
+							.style('fill', 'none');
+
+					svg
+						.append('text')
+							.attr('y', insideRadius + 40)
+							.attr('x', -7 * 1.5)
+							.attr('fill', 'lightgrey')
+							.style('opacity', 0.6)
+							.text('50%');
+
+					svg
+						.append('circle')
+							.attr('r', insideRadius + 100)
+							.style('opacity', 0.6)
+							.style('stroke', 'lightgrey')
+							.style('fill', 'none');
+
+					svg
+						.append('text')
+							.attr('y', insideRadius + 90)
+							.attr('x', -7 * 2)
+							.attr('fill', 'lightgrey')
+							.style('opacity', 0.6)
+							.text('100%');
+
 					legend.append('rect')
 						.attr('width', legendRectSize)
 						.attr('height', legendRectSize)
@@ -220,7 +311,7 @@
 						.attr('y', legendRectSize - legendSpacing)
 						.text(function(d) { return d; });
 
-					$('#chartTotal').prepend('<h2>' + 'Total Daily Percent' + '</h2>');
+					$('#chartTotal').prepend('<h2>' + 'Total Daily Amounts' + '</h2>');
 				});
 			}
 
