@@ -129,10 +129,16 @@
 						.data(pie(dataset))
 						.enter()
 						.append('path')
+						.style('opacity', 0)
 						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100))(d, i); })
 						.attr('fill', function(d) {
 							return color(d.data.label);
 						});
+
+					path
+						.transition()
+						.duration(1000)
+						.style('opacity', 1);
 
 					svg
 						.append('circle')
@@ -147,7 +153,10 @@
 							.attr('x', -7)
 							.attr('fill', 'lightgrey')
 							.style('opacity', 0.6)
-							.text('0%');
+							.text('0%')
+							.transition()
+							.duration(4000)
+							.style('opacity', 1);
 
 					svg
 						.append('circle')
@@ -236,23 +245,17 @@
 						.data(pie(dataTotal))
 						.enter()
 						.append('path')
+						.style('opacity', 0)
 						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100))(d, i); })
 						.attr('fill', function(d) {
 							return color(d.data.label);
 						});
 
-					legend = svg.selectAll('.legend')
-						.data(color.domain())
-						.enter()
-						.append('g')
-						.attr('class', 'legend')
-						.attr('transform', function(d, i) {
-							var height = legendRectSize + legendSpacing;
-							var offset =  height * color.domain().length / 2;
-							var horz = -2 * legendRectSize;
-							var vert = i * height - offset;
-							return 'translate(' + horz + ',' + vert + ')';
-						});
+					path
+						.transition()
+						.delay(1000)
+						.duration(1000)
+						.style('opacity', 1);
 
 					svg
 						.append('circle')
@@ -268,7 +271,6 @@
 							.attr('fill', 'lightgrey')
 							.style('opacity', 0.6)
 							.text('0%');
-
 
 					svg
 						.append('circle')
@@ -299,6 +301,19 @@
 							.attr('fill', 'lightgrey')
 							.style('opacity', 0.6)
 							.text('100%');
+
+					legend = svg.selectAll('.legend')
+						.data(color.domain())
+						.enter()
+						.append('g')
+						.attr('class', 'legend')
+						.attr('transform', function(d, i) {
+							var height = legendRectSize + legendSpacing;
+							var offset =  height * color.domain().length / 2;
+							var horz = -2 * legendRectSize;
+							var vert = i * height - offset;
+							return 'translate(' + horz + ',' + vert + ')';
+						});
 
 					legend.append('rect')
 						.attr('width', legendRectSize)
