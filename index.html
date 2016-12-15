@@ -133,6 +133,14 @@
 						.value(function(d) { return d.count; })
 						.sort(null);
 
+					var arc2 = d3.arc()
+						.innerRadius(insideRadius + 100)
+						.outerRadius(insideRadius + 110);
+
+					var pie2 = d3.pie()
+						.value(function(d) { return d.count; })
+						.sort(null);
+
 					var path = svg.selectAll('path')
 						.data(pie(dataset))
 						.enter()
@@ -142,6 +150,11 @@
 						.attr('fill', function(d) {
 							return color(d.data.label);
 						});
+
+					var svg2 = d3.select('#chart svg:first-of-type')
+						.append('g')
+						.attr('transform', 'translate(' + (width / 2) +
+							',' + (height / 2) + ')');
 
 					path
 						.transition()
@@ -221,6 +234,24 @@
 						.text(function(d) { return d; });
 
 					$('#chart').prepend('<h2>' + foodDesc + '</h2>').css('textTransform', 'capitalize');
+
+					var path2 = svg2.selectAll('path')
+						.data(pie2(dataset))
+						.enter()
+						.append('path')
+						.style('opacity', 0)
+						.attr('d', function(d, i) {
+							if (d.data.percent > 100) {
+									 return arc2.outerRadius(insideRadius + 110)(d, i);
+							}
+						})
+						.attr('fill', 'red');
+
+					path2
+						.transition()
+						.delay(1000)
+						.duration(1000)
+						.style('opacity', 1);
 
 					dataTotal[0].percent += dataset[0].percent;
 					dataTotal[1].percent += dataset[1].percent;
@@ -338,6 +369,29 @@
 
 					$('#chartTotal').prepend('<h2>' + 'Total Daily Amounts' + '</h2>');
 					$('#chartTotal').append('<h4>' + 'Calories: ' + caloriesTotal + '</h4>');
+
+					var svg2 = d3.select('#chartTotal svg:first-of-type')
+						.append('g')
+						.attr('transform', 'translate(' + (width / 2) +
+							',' + (height / 2) + ')');
+
+					var path2 = svg2.selectAll('path')
+						.data(pie2(dataTotal))
+						.enter()
+						.append('path')
+						.style('opacity', 0)
+						.attr('d', function(d, i) {
+							if (d.data.percent > 100) {
+									 return arc2.outerRadius(insideRadius + 110)(d, i);
+							}
+						})
+						.attr('fill', 'red');
+
+					path2
+						.transition()
+						.delay(2000)
+						.duration(1000)
+						.style('opacity', 1);
 				});
 			}
 
