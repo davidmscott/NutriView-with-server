@@ -30,9 +30,17 @@
 			svg {
 				border: 1px solid lightgrey;
 				border-radius: 5px;
+				cursor: default;
 			}
 			form {
 				margin-top: 5px;
+			}
+			.tooltip {
+		    position: absolute;
+		    pointer-events: none;
+				color: darkgrey;
+				font-weight: bold;
+				font-size: 150%;
 			}
 		</style>
 	</head>
@@ -88,9 +96,9 @@
 					var quantity = JSON.parse(res.body).ingredients[0].parsed[0].quantity;
 					var measure = JSON.parse(res.body).ingredients[0].parsed[0].measure;
 					var totalDaily = JSON.parse(res.body).totalDaily;
-						dataset[0].percent = totalDaily.FAT ? totalDaily.FAT.quantity : 0;
-						dataset[1].percent = totalDaily.CHOCDF ? totalDaily.CHOCDF.quantity : 0;
-						dataset[2].percent = totalDaily.PROCNT ? totalDaily.PROCNT.quantity : 0;
+					dataset[0].percent = totalDaily.FAT ? totalDaily.FAT.quantity : 0;
+					dataset[1].percent = totalDaily.CHOCDF ? totalDaily.CHOCDF.quantity : 0;
+					dataset[2].percent = totalDaily.PROCNT ? totalDaily.PROCNT.quantity : 0;
 					var width = 400;
 					var height = 400;
 					var radius = Math.min(width, height) / 2;
@@ -133,13 +141,9 @@
 						.value(function(d) { return d.count; })
 						.sort(null);
 
-					var arc2 = d3.arc()
-						.innerRadius(insideRadius + 100)
-						.outerRadius(insideRadius + 110);
-
-					var pie2 = d3.pie()
-						.value(function(d) { return d.count; })
-						.sort(null);
+					var div = d3.select('#chart').append('div')
+				    .attr('class', 'tooltip')
+				    .style('opacity', 0);
 
 					var path = svg.selectAll('path')
 						.data(pie(dataset))
@@ -149,12 +153,42 @@
 						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100))(d, i); })
 						.attr('fill', function(d) {
 							return color(d.data.label);
+						})
+						.on('mouseover', function(d) {
+	            div
+								.transition()
+                .duration(200)
+                .style('opacity', 1);
+	            div
+								.html(d.data.percent.toFixed(1) + '%')
+                .style('left', d3.event.layerX + 20 + 'px')
+                .style('top', d3.event.layerY - 10 + 'px');
+							console.log(d3.event);
+            })
+		        .on('mouseout', function(d) {
+	            div
+								.transition()
+	              .duration(500)
+	              .style('opacity', 0);
+		        })
+						.on('mousemove', function(d) {
+							div
+								.style('left', d3.event.layerX + 20 + 'px')
+								.style('top', d3.event.layerY - 10 + 'px')
 						});
 
 					var svg2 = d3.select('#chart svg:first-of-type')
 						.append('g')
 						.attr('transform', 'translate(' + (width / 2) +
 							',' + (height / 2) + ')');
+
+					var arc2 = d3.arc()
+						.innerRadius(insideRadius + 100)
+						.outerRadius(insideRadius + 110);
+
+					var pie2 = d3.pie()
+						.value(function(d) { return d.count; })
+						.sort(null);
 
 					path
 						.transition()
@@ -280,6 +314,10 @@
 						.value(function(d) { return d.count; })
 						.sort(null);
 
+					div2 = d3.select('#chartTotal').append('div')
+				    .attr('class', 'tooltip')
+				    .style('opacity', 0);
+
 					path = svg.selectAll('path')
 						.data(pie(dataTotal))
 						.enter()
@@ -288,6 +326,28 @@
 						.attr('d', function(d, i) { return arc.outerRadius(insideRadius + Math.min(d.data.percent, 100))(d, i); })
 						.attr('fill', function(d) {
 							return color(d.data.label);
+						})
+						.on('mouseover', function(d) {
+							div2
+								.transition()
+								.duration(200)
+								.style('opacity', 1);
+							div2
+								.html(d.data.percent.toFixed(1) + '%')
+								.style('left', d3.event.layerX + 20 + 'px')
+								.style('top', d3.event.layerY - 10 + 'px');
+							console.log(d3.event);
+						})
+						.on('mouseout', function(d) {
+							div2
+								.transition()
+								.duration(500)
+								.style('opacity', 0);
+						})
+						.on('mousemove', function(d) {
+							div2
+								.style('left', d3.event.layerX + 20 + 'px')
+								.style('top', d3.event.layerY - 10 + 'px')
 						});
 
 					path
@@ -370,12 +430,12 @@
 					$('#chartTotal').prepend('<h2>' + 'Total Daily Amounts' + '</h2>');
 					$('#chartTotal').append('<h4>' + 'Calories: ' + caloriesTotal + '</h4>');
 
-					var svg2 = d3.select('#chartTotal svg:first-of-type')
+					svg2 = d3.select('#chartTotal svg:first-of-type')
 						.append('g')
 						.attr('transform', 'translate(' + (width / 2) +
 							',' + (height / 2) + ')');
 
-					var path2 = svg2.selectAll('path')
+					path2 = svg2.selectAll('path')
 						.data(pie2(dataTotal))
 						.enter()
 						.append('path')
