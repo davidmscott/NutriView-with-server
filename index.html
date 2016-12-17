@@ -163,13 +163,16 @@
 								.html(d.data.percent.toFixed(1) + '%')
                 .style('left', d3.event.layerX + 20 + 'px')
                 .style('top', d3.event.layerY - 10 + 'px');
-							console.log(d3.event);
+							d3.select(this)
+								.style('fill', function(d){return d3.rgb(this.getAttribute('fill')).darker(0.3);})
             })
 		        .on('mouseout', function(d) {
 	            div
 								.transition()
 	              .duration(500)
 	              .style('opacity', 0);
+							d3.select(this)
+								.style('fill', function(d){return d3.rgb(this.getAttribute('fill')).brighter(0.3);})
 		        })
 						.on('mousemove', function(d) {
 							div
@@ -336,13 +339,16 @@
 								.html(d.data.percent.toFixed(1) + '%')
 								.style('left', d3.event.layerX + 20 + 'px')
 								.style('top', d3.event.layerY - 10 + 'px');
-							console.log(d3.event);
+							d3.select(this)
+								.style('fill', function(d){return d3.rgb(this.getAttribute('fill')).darker(0.3);})
 						})
 						.on('mouseout', function(d) {
 							div2
 								.transition()
 								.duration(500)
 								.style('opacity', 0);
+							d3.select(this)
+								.style('fill', function(d){return d3.rgb(this.getAttribute('fill')).brighter(0.3);})
 						})
 						.on('mousemove', function(d) {
 							div2
