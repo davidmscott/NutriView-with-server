@@ -277,7 +277,7 @@ function searchFood() {
           .style('left', d3.event.layerX + 20 + 'px')
           .style('top', d3.event.layerY - 10 + 'px');
         d3.select(this)
-          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).darker(0.3);})
+          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).darker(0.3);});
       })
       .on('mouseout', function(d) {
         div2
@@ -285,12 +285,12 @@ function searchFood() {
           .duration(500)
           .style('opacity', 0);
         d3.select(this)
-          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).brighter(0.3);})
+          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).brighter(0.3);});
       })
       .on('mousemove', function(d) {
         div2
           .style('left', d3.event.layerX + 20 + 'px')
-          .style('top', d3.event.layerY - 10 + 'px')
+          .style('top', d3.event.layerY - 10 + 'px');
       });
 
     path
@@ -399,7 +399,7 @@ function searchFood() {
           .style('left', d3.event.layerX + 20 + 'px')
           .style('top', d3.event.layerY - 10 + 'px');
         d3.select(this)
-          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).darker(0.3);})
+          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).darker(0.3);});
       })
       .on('mouseout', function(d) {
         div2
@@ -407,13 +407,13 @@ function searchFood() {
           .duration(500)
           .style('opacity', 0);
         d3.select(this)
-          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).brighter(0.3);})
+          .style('fill', function(d){return d3.rgb(this.getAttribute('fill')).brighter(0.3);});
       })
       .on('mousemove', function(d) {
         div2
           .style('left', d3.event.layerX + 20 + 'px')
-          .style('top', d3.event.layerY - 10 + 'px')
-      });;
+          .style('top', d3.event.layerY - 10 + 'px');
+      });
 
     path2
       .transition()
