@@ -3,7 +3,7 @@ import React from 'react';
 const FoodListItem = (props) => {
   return (
     <li>
-      Food
+      {props.foodItem.body}
     </li>
   );
 };
