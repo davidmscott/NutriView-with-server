@@ -3,7 +3,7 @@ import React from 'react';
 const FoodListItem = (props) => {
   return (
     <li>
-      {props.foodItem.body}
+      {JSON.stringify(props.foodItem)}
     </li>
   );
 };
