@@ -17,7 +17,8 @@ class App extends Component {
       summary: {
         fat: 0,
         carbohydrates: 0,
-        protein: 0
+        protein: 0,
+        calories: 0
       }
     };
   }
@@ -39,19 +40,27 @@ class App extends Component {
         var protein = updatedFoodItems.reduce((a, b) => {
           return ( a.totalDaily ? ( a.totalDaily.PROCNT ? a.totalDaily.PROCNT.quantity : 0 ) : a ) + ( b.totalDaily.PROCNT ? b.totalDaily.PROCNT.quantity : 0 );
         });
+        var calories = updatedFoodItems.reduce((a, b) => {
+          console.log('a', a, a.calories, typeof a, ( a.calories ? a.calories : a ));
+          return ( a.calories ? a.calories : ( a.calories == 0 ? a.calories : a )) + b.calories;
+        });
       } else {
         var fat = updatedFoodItems[0].totalDaily.FAT ? updatedFoodItems[0].totalDaily.FAT.quantity : 0;
         var carbohydrates = updatedFoodItems[0].totalDaily.CHOCDF ? updatedFoodItems[0].totalDaily.CHOCDF.quantity : 0;
         var protein = updatedFoodItems[0].totalDaily.PROCNT ? updatedFoodItems[0].totalDaily.PROCNT.quantity : 0;
+        var calories = updatedFoodItems[0].calories;
       }
+
+      var newSummary = {
+        fat,
+        carbohydrates,
+        protein,
+        calories
+      };
 
       this.setState({
         foodItems: updatedFoodItems,
-        summary: {
-          fat,
-          carbohydrates,
-          protein
-        }
+        summary: newSummary
       });
     }.bind(this));
 

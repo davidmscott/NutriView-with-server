@@ -9,7 +9,6 @@ class FoodListItem extends Component {
   }
 
   componentDidMount() {
-    console.log('component did mount', this.props.foodItem);
     var responseBody = this.props.foodItem;
     var dataset = [
       { label: 'Protein', count: 1 },
@@ -50,7 +49,6 @@ class FoodListItem extends Component {
     // var color = d3.scaleOrdinal()
     // 	.range(['#A60F2B', '#648C85', '#B3F2C9', '#528C18', '#C3F25C']);
 
-    // var svg = d3.select('#chart')
     var svg = d3.select(this.refs.pieChart)
       .insert('svg',':first-child')
       .attr('class', 'rounded')
@@ -114,19 +112,6 @@ class FoodListItem extends Component {
           .style('left', d3.event.layerX + 20 + 'px')
           .style('top', d3.event.layerY - 10 + 'px')
       });
-
-    // var svg2 = d3.select('#chart svg:first-of-type')
-    //   .append('g')
-    //   .attr('transform', 'translate(' + (width / 2) +
-    //     ',' + (height / 2) + ')');
-    //
-    // var arc2 = d3.arc()
-    //   .innerRadius(insideRadius + 100)
-    //   .outerRadius(insideRadius + 110);
-    //
-    // var pie2 = d3.pie()
-    //   .value(function(d) { return d.count; })
-    //   .sort(null);
 
     path
       .transition()

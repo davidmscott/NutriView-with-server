@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
 
-// Functional component:
-// const AddNewFoodItem = () => {
-//   return <input />;
-// };
-
-// Class-based component:
 class AddNewDateItem extends Component {
   constructor(props) {
     super(props);
