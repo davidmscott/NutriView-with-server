@@ -30,9 +30,15 @@ class App extends Component {
       var updatedFoodItems = [JSON.parse(res.body), ...this.state.foodItems];
 
       if (updatedFoodItems.length > 1) {
-        var fat = updatedFoodItems.reduce((a, b) => a.totalDaily.FAT.quantity + b.totalDaily.FAT.quantity);
-        var carbohydrates = updatedFoodItems.reduce((a, b) => a.totalDaily.CHOCDF.quantity + b.totalDaily.CHOCDF.quantity);
-        var protein = updatedFoodItems.reduce((a, b) => a.totalDaily.PROCNT.quantity + b.totalDaily.PROCNT.quantity);
+        var fat = updatedFoodItems.reduce((a, b) => {
+          return ( a.totalDaily ? ( a.totalDaily.FAT ? a.totalDaily.FAT.quantity : 0 ) : a ) + ( b.totalDaily.FAT ? b.totalDaily.FAT.quantity : 0 );
+        });
+        var carbohydrates = updatedFoodItems.reduce((a, b) => {
+          return ( a.totalDaily ? ( a.totalDaily.CHOCDF ? a.totalDaily.CHOCDF.quantity : 0 ) : a ) + ( b.totalDaily.CHOCDF ? b.totalDaily.CHOCDF.quantity : 0 );
+        });
+        var protein = updatedFoodItems.reduce((a, b) => {
+          return ( a.totalDaily ? ( a.totalDaily.PROCNT ? a.totalDaily.PROCNT.quantity : 0 ) : a ) + ( b.totalDaily.PROCNT ? b.totalDaily.PROCNT.quantity : 0 );
+        });
       } else {
         var fat = updatedFoodItems[0].totalDaily.FAT ? updatedFoodItems[0].totalDaily.FAT.quantity : 0;
         var carbohydrates = updatedFoodItems[0].totalDaily.CHOCDF ? updatedFoodItems[0].totalDaily.CHOCDF.quantity : 0;
@@ -48,6 +54,7 @@ class App extends Component {
         }
       });
     }.bind(this));
+
   }
 
   addDate(dateInput) {

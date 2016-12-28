@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-const FoodSummary = (props) => {
-  return (
-    <div>
-      {props.summary.fat}
-    </div>
-  );
+class FoodSummary extends Component {
+
+  render() {
+    return (
+      <div>
+        {this.props.summary.fat}
+      </div>
+    );
+  }
 };
 
 export default FoodSummary;

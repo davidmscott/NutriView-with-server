@@ -4,8 +4,12 @@ import FoodListItem from './food_list_item';
 
 const FoodList = (props) => {
   // use index as key only as a last resort --refactor if better key is possible
+  console.log('pre-map', props.foodItems);
   const foods = props.foodItems.map((foodItem, index) => {
-    return <FoodListItem key={index} foodItem={foodItem} />;
+    console.log('map', foodItem);
+    return (
+      <FoodListItem key={foodItem.uri} foodItem={foodItem} />
+    );
   });
 
   return (
