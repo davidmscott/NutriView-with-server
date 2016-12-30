@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import AddNewFoodItem from './components/add_new_food_item';
-import AddNewDateItem from './components/add_new_date_item';
-import FoodSummary from './components/food_summary';
-import FoodList from './components/food_list';
-import DateList from './components/date_list';
+import Foods from './components/foods';
+import Dates from './components/dates';
 
 class App extends Component {
   constructor(props) {
@@ -19,7 +16,8 @@ class App extends Component {
         carbohydrates: 0,
         protein: 0,
         calories: 0
-      }
+      },
+      route: 'foods'
     };
   }
 
@@ -71,17 +69,42 @@ class App extends Component {
     this.setState({dateItems: updatedDateItems});
   }
 
-  render() {
-    return (
-      <div>
-        <FoodSummary summary={this.state.summary} />
-        <AddNewDateItem onAddDate={dateInput => this.addDate(dateInput)} />
-        <DateList dateItems={this.state.dateItems} />
-        <AddNewFoodItem onFoodSearch={search => this.foodSearch(search)} />
-        <FoodList foodItems={this.state.foodItems} />
-      </div>
-    );
+  tryToLogin(login) {
+
   }
+
+  render() {
+    if (this.state.route === 'login') {
+      return (
+          <Login state={this.state} onLogin={login => this.tryToLogin(login)} />
+      );
+    }
+
+    if (this.state.route === 'dates') {
+      return (
+          <Dates state={this.state} onAddDate={dateInput => this.addDate(dateInput)} />
+      );
+    }
+
+    if (this.state.route === 'foods') {
+      return (
+          <Foods state={this.state} onFoodSearch={search => this.foodSearch(search)} />
+      );
+    }
+  }
+
+
+  // render() {
+  //   return (
+  //     <div>
+  //       <FoodSummary summary={this.state.summary} />
+  //       <AddNewDateItem onAddDate={dateInput => this.addDate(dateInput)} />
+  //       <DateList dateItems={this.state.dateItems} />
+  //       <AddNewFoodItem onFoodSearch={search => this.foodSearch(search)} />
+  //       <FoodList foodItems={this.state.foodItems} />
+  //     </div>
+  //   );
+  // }
 };
 
 ReactDOM.render(<App />, document.querySelector('.container'));
