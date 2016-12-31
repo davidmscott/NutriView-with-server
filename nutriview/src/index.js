@@ -23,6 +23,7 @@ class App extends Component {
 
   foodSearch(search) {
     $.get(`http://localhost:8000/nutrients`, search, function(res) {
+      console.log(typeof res, res);
       if (!JSON.parse(res.body).ingredients[0].parsed) {
         return;
       }
