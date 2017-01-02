@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 
 class AddNewDateItem extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <form className="form-inline" onSubmit={event => event.preventDefault()}>

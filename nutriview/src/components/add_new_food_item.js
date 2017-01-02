@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 // Functional component:
 // const AddNewFoodItem = () => {
@@ -7,11 +7,8 @@ import React, { Component } from 'react';
 
 // Class-based component:
 class AddNewFoodItem extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
+    console.log('AddnewFoodItemRender');
     return (
       <form className="form-inline" onSubmit={event => event.preventDefault()}>
         <div className="form-group">
@@ -28,7 +25,8 @@ class AddNewFoodItem extends Component {
     if (!search) {
       return;
     }
-    this.props.onFoodSearch(search);
+    var selectedDate = this.props.selectedDate;
+    this.props.onAddFood(search, selectedDate);
   }
 
 }

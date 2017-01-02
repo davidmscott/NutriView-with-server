@@ -2,9 +2,13 @@ import React, {Component} from 'react';
 
 class FoodListItem extends Component {
   render() {
+    console.log('FoodListItemRender');
     return (
+      <div>
         <li ref="pieChart">
         </li>
+        <button onClick={() => this.props.onDeleteFood(this.props.id)}>X</button>
+      </div>
     );
   }
 

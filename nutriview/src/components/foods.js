@@ -8,8 +8,14 @@ const Foods = (props) => {
   return (
     <div>
       <FoodSummary summary={props.state.summary} />
-      <AddNewFoodItem onFoodSearch={props.onFoodSearch} />
-      <FoodList foodItems={props.state.foodItems} />
+      <AddNewFoodItem
+        onAddFood={props.onAddFood}
+        selectedDate={props.state.selectedDate}
+      />
+      <FoodList
+        foodItems={props.state.foodItems}
+        onDeleteFood={props.onDeleteFood}
+      />
     </div>
   );
 };

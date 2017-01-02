@@ -4,6 +4,7 @@ const DateListItem = (props) => {
   return (
     <li>
       {props.dateItem}
+      <button onClick={() => props.onDeleteDate(props.dateItem)}>X</button>
     </li>
   );
 };

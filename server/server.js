@@ -14,6 +14,9 @@ var port = process.env.PORT || 8000;
 
 app.use(express.static(__dirname));
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -26,29 +29,32 @@ var apiKey = '9c762c838016043633065dcee0261687';
 var apiId = 'ab3d9cfa';
 var baseUrl = `https://api.edamam.com/api/nutrition-data?app_id=${apiId}&app_key=${apiKey}&ingr=`;
 
-app.get('/nutrients', (req, res) => {
+app.get('/food', (req, res) => {
+	console.log(req);
 	// res.setHeader('Access-Control-Allow-Origin', '*');
 	// res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 	// res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
 	// res.setHeader('Access-Control-Allow-Credentials', true);
 	var term = req._parsedUrl.query;
 	var url = `${baseUrl}${term}`;
+	var date = req.query.selectedDate || Date.now();
 	request(url, (error, response, body) => {
-		console.log('request', typeof response);
+		if (!JSON.parse(body).ingredients[0].parsed || JSON.parse(body).ingredients[0].parsed[0].quantity == 0) {
+			res.status(404).send();
+		}
+
 		var foodItem = new FoodItem({
 			user: 'Dave',
-			date: 1000,
+			date,
 			foodDetail: JSON.stringify(response)
 		});
 
 		foodItem.save().then((doc) => {
-			console.log('dbsave', typeof doc);
-			res.send(JSON.parse(doc.foodDetail));
+			console.log(doc);
+			res.send(doc);
 		}, (error) => {
-			console.log('dberror');
 			res.status(400).send(error);
 		});
-		// res.send(response);
 	});
 });
 
@@ -76,20 +82,19 @@ app.get('/dates', (req, res) => {
 	});
 });
 
-app.delete('/food', (req, res) => {
-	FoodItem.findByIdAndRemove(reg.body.id).then((food) => {
+app.post('/removefood', (req, res) => {
+	FoodItem.findByIdAndRemove(req.body.id).then((food) => {
 		if (!food) {
 			return res.status(404).send();
 		}
-
 		res.send(food);
 	}).catch((error) => {
 		res.status(400).send(error);
 	});
 });
 
-app.delete('/date', (req, res) => {
-	FoodItem.remove({date: req.body}).then((result) => {
+app.post('/removedate', (req, res) => {
+	FoodItem.remove({date: req.body.date}).then((result) => {
 		res.send(result.result);
 	}).catch((error) => {
 		res.status(400).send(error);

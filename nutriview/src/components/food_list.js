@@ -4,9 +4,14 @@ import FoodListItem from './food_list_item';
 
 const FoodList = (props) => {
   // use index as key only as a last resort --refactor if better key is possible
-  const foods = props.foodItems.map((foodItem, index) => {
+  const foods = props.foodItems.map((foodItem) => {
     return (
-      <FoodListItem key={foodItem.uri} foodItem={foodItem} />
+      <FoodListItem
+        key={foodItem.id}
+        id={foodItem.id}
+        foodItem={foodItem}
+        onDeleteFood={props.onDeleteFood}
+      />
     );
   });
 

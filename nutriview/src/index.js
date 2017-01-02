@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import Foods from './components/foods';
@@ -7,7 +7,7 @@ import Dates from './components/dates';
 class App extends Component {
   constructor(props) {
     super(props);
-
+    console.log('app constructor');
     this.state = {
       foodItems: [],
       dateItems: ['1/1/2016', '1/2/2016'],
@@ -17,17 +17,17 @@ class App extends Component {
         protein: 0,
         calories: 0
       },
+      selectedDate: null,
       route: 'foods'
     };
   }
 
-  foodSearch(search) {
-    $.get(`http://localhost:8000/nutrients`, search, function(res) {
-      console.log(typeof res, res);
-      if (!JSON.parse(res.body).ingredients[0].parsed) {
-        return;
-      }
-      var updatedFoodItems = [JSON.parse(res.body), ...this.state.foodItems];
+  addFood(search, selectedDate) {
+    var data = {search, selectedDate};
+    $.get(`http://localhost:8000/food`, data, (res) => {
+      var newFood = JSON.parse(JSON.parse(res.foodDetail).body);
+      newFood.id = res._id;
+      var updatedFoodItems = [newFood, ...this.state.foodItems];
 
       if (updatedFoodItems.length > 1) {
         var fat = updatedFoodItems.reduce((a, b) => {
@@ -40,7 +40,6 @@ class App extends Component {
           return ( a.totalDaily ? ( a.totalDaily.PROCNT ? a.totalDaily.PROCNT.quantity : 0 ) : a ) + ( b.totalDaily.PROCNT ? b.totalDaily.PROCNT.quantity : 0 );
         });
         var calories = updatedFoodItems.reduce((a, b) => {
-          console.log('a', a, a.calories, typeof a, ( a.calories ? a.calories : a ));
           return ( a.calories ? a.calories : ( a.calories == 0 ? a.calories : a )) + b.calories;
         });
       } else {
@@ -59,15 +58,44 @@ class App extends Component {
 
       this.setState({
         foodItems: updatedFoodItems,
-        summary: newSummary
+        summary: newSummary,
+        route: 'dates'
       });
-    }.bind(this));
+    }).fail(error => alert('No results found.  The Nutritionix API works best with searches like "1 large apple" or "8 ounce milk" as opposed to "apples".'));
+  }
 
+  deleteFood(id) {
+    $.post(`http://localhost:8000/removefood`, {id}, (res) => {
+      this.getFoods();
+    }).fail(error => alert('Unable to delete entry from the database.'));
+  }
+
+  getFoods() {
+    console.log('getFoods');
   }
 
   addDate(dateInput) {
+    console.log('addDate');
+    //validate dateInput is the format I want it to be
     var updatedDateItems = [...this.state.dateItems, dateInput]
-    this.setState({dateItems: updatedDateItems});
+    this.setState({
+      dateItems: updatedDateItems,
+      selectedDate: dateInput,
+      route: 'foods'
+    });
+  }
+
+  getDates() {
+    $.get(`http://localhost:8000/dates`, (res) => {
+      var updatedDateItems = [...res.dateList];
+      this.setState({dateItems: updatedDateItems});
+    });
+  }
+
+  deleteDate(date) {
+    $.post(`http://localhost:8000/removedate`, {date}, (res) => {
+      this.getDates();
+    }).fail(error => alert('Unable to delete entry from the database.'));
   }
 
   tryToLogin(login) {
@@ -75,37 +103,41 @@ class App extends Component {
   }
 
   render() {
+    console.log('render');
     if (this.state.route === 'login') {
+      console.log('route: login');
       return (
-          <Login state={this.state} onLogin={login => this.tryToLogin(login)} />
+          <Login
+            state={this.state}
+            onLogin={login => this.tryToLogin(login)}
+          />
       );
     }
 
     if (this.state.route === 'dates') {
+      console.log('route: dates');
       return (
-          <Dates state={this.state} onAddDate={dateInput => this.addDate(dateInput)} />
+          <Dates
+            state={this.state}
+            onAddDate={dateInput => this.addDate(dateInput)}
+            onGetDates={() => this.getDates()}
+            onDeleteDate={date => this.deleteDate(date)}
+          />
       );
     }
 
     if (this.state.route === 'foods') {
+      console.log('route: foods');
       return (
-          <Foods state={this.state} onFoodSearch={search => this.foodSearch(search)} />
+          <Foods
+            state={this.state}
+            onAddFood={(search, selectedDate) => this.addFood(search, selectedDate)}
+            onDeleteFood={id => this.deleteFood(id)}
+          />
       );
     }
   }
 
-
-  // render() {
-  //   return (
-  //     <div>
-  //       <FoodSummary summary={this.state.summary} />
-  //       <AddNewDateItem onAddDate={dateInput => this.addDate(dateInput)} />
-  //       <DateList dateItems={this.state.dateItems} />
-  //       <AddNewFoodItem onFoodSearch={search => this.foodSearch(search)} />
-  //       <FoodList foodItems={this.state.foodItems} />
-  //     </div>
-  //   );
-  // }
 };
 
 ReactDOM.render(<App />, document.querySelector('.container'));

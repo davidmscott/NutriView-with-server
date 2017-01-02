@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 class FoodSummary extends Component {
   render() {
+    console.log("FoodSummaryRender");
     return (
       <div ref="summaryChart">
         {this.showSummary()}
@@ -21,7 +22,7 @@ class FoodSummary extends Component {
       { label: 'Carbohydrates', count: 1, percent: summaryData.carbohydrates },
       { label: 'Fat', count: 1, percent: summaryData.fat }
     ];
-    
+
     var caloriesTotal = summaryData.calories;
     var width = 400;
     var height = 400;
