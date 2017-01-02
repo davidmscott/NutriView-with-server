@@ -59,19 +59,24 @@ class App extends Component {
       this.setState({
         foodItems: updatedFoodItems,
         summary: newSummary,
-        route: 'dates'
+        route: 'dates',
+        selectedDate
       });
     }).fail(error => alert('No results found.  The Nutritionix API works best with searches like "1 large apple" or "8 ounce milk" as opposed to "apples".'));
   }
 
   deleteFood(id) {
     $.post(`http://localhost:8000/removefood`, {id}, (res) => {
-      this.getFoods();
+      this.getFoods(this.state.selectedDate);
     }).fail(error => alert('Unable to delete entry from the database.'));
   }
 
-  getFoods() {
+  getFoods(date) {
     console.log('getFoods');
+    $.get(`http://localhost:8000/foods`, {date}, (res) => {
+      var updatedFoodItems = [...res.foodList];
+      this.setState({foodItems: updatedFoodItems})
+    });
   }
 
   addDate(dateInput) {

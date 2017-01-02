@@ -60,7 +60,7 @@ app.get('/food', (req, res) => {
 
 app.get('/foods', (req, res) => {
 	console.log(req);
-	FoodItem.find({date: req.body}).then((foodList) => {
+	FoodItem.find({date: req.body.date}).then((foodList) => {
 		res.send({foodList});
 	}, (error) => {
 		res.status(400).send(error);
