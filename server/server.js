@@ -30,7 +30,6 @@ var apiId = 'ab3d9cfa';
 var baseUrl = `https://api.edamam.com/api/nutrition-data?app_id=${apiId}&app_key=${apiKey}&ingr=`;
 
 app.get('/food', (req, res) => {
-	console.log(req);
 	// res.setHeader('Access-Control-Allow-Origin', '*');
 	// res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 	// res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
@@ -44,13 +43,12 @@ app.get('/food', (req, res) => {
 		}
 
 		var foodItem = new FoodItem({
-			user: 'Dave',
+			user: req.query.user,
 			date,
 			foodDetail: JSON.stringify(response)
 		});
 
 		foodItem.save().then((doc) => {
-			console.log(doc);
 			res.send(doc);
 		}, (error) => {
 			res.status(400).send(error);
@@ -59,8 +57,7 @@ app.get('/food', (req, res) => {
 });
 
 app.get('/foods', (req, res) => {
-	console.log(req);
-	FoodItem.find({date: req.body.date}).then((foodList) => {
+	FoodItem.find({date: req.query.date}).then((foodList) => {
 		res.send({foodList});
 	}, (error) => {
 		res.status(400).send(error);
@@ -68,7 +65,6 @@ app.get('/foods', (req, res) => {
 });
 
 app.get('/dates', (req, res) => {
-	console.log(req);
 	FoodItem.find().then((foodList) => {
 		var dateList = foodList.map((foodItem) => {
 			return foodItem.date;

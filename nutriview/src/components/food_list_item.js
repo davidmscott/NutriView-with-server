@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 
 class FoodListItem extends Component {
   render() {
-    console.log('FoodListItemRender');
     return (
       <div>
         <li ref="pieChart">

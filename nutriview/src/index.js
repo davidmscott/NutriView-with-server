@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
-import Foods from './components/foods';
+import Login from './components/login';
 import Dates from './components/dates';
+import Foods from './components/foods';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log('app constructor');
+
     this.state = {
       foodItems: [],
       dateItems: ['1/1/2016', '1/2/2016'],
@@ -18,12 +19,17 @@ class App extends Component {
         calories: 0
       },
       selectedDate: null,
-      route: 'foods'
+      user: null,
+      route: 'login'
     };
   }
 
   addFood(search, selectedDate) {
-    var data = {search, selectedDate};
+    var data = {
+      search,
+      selectedDate,
+      user: this.state.user
+    };
     $.get(`http://localhost:8000/food`, data, (res) => {
       var newFood = JSON.parse(JSON.parse(res.foodDetail).body);
       newFood.id = res._id;
@@ -59,8 +65,6 @@ class App extends Component {
       this.setState({
         foodItems: updatedFoodItems,
         summary: newSummary,
-        route: 'dates',
-        selectedDate
       });
     }).fail(error => alert('No results found.  The Nutritionix API works best with searches like "1 large apple" or "8 ounce milk" as opposed to "apples".'));
   }
@@ -71,16 +75,18 @@ class App extends Component {
     }).fail(error => alert('Unable to delete entry from the database.'));
   }
 
-  getFoods(date) {
-    console.log('getFoods');
-    $.get(`http://localhost:8000/foods`, {date}, (res) => {
-      var updatedFoodItems = [...res.foodList];
-      this.setState({foodItems: updatedFoodItems})
+  getFoods() {
+    $.get(`http://localhost:8000/foods`, {date: this.state.selectedDate}, (res) => {
+      var updatedFoodItems = res.foodList.map(foodItem => {
+        var newFood = JSON.parse(JSON.parse(foodItem.foodDetail).body);
+        newFood.id = foodItem._id;
+        return newFood;
+      });
+      this.setState({foodItems: updatedFoodItems});
     });
   }
 
   addDate(dateInput) {
-    console.log('addDate');
     //validate dateInput is the format I want it to be
     var updatedDateItems = [...this.state.dateItems, dateInput]
     this.setState({
@@ -104,13 +110,14 @@ class App extends Component {
   }
 
   tryToLogin(login) {
-
+    this.setState({
+      user: login.username,
+      route: 'dates'
+    });
   }
 
   render() {
-    console.log('render');
     if (this.state.route === 'login') {
-      console.log('route: login');
       return (
           <Login
             state={this.state}
@@ -120,7 +127,6 @@ class App extends Component {
     }
 
     if (this.state.route === 'dates') {
-      console.log('route: dates');
       return (
           <Dates
             state={this.state}
@@ -132,12 +138,12 @@ class App extends Component {
     }
 
     if (this.state.route === 'foods') {
-      console.log('route: foods');
       return (
           <Foods
             state={this.state}
             onAddFood={(search, selectedDate) => this.addFood(search, selectedDate)}
             onDeleteFood={id => this.deleteFood(id)}
+            onGetFoods={() => this.getFoods()}
           />
       );
     }

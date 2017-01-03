@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 
 class FoodSummary extends Component {
   render() {
-    console.log("FoodSummaryRender");
     return (
       <div ref="summaryChart">
         {this.showSummary()}

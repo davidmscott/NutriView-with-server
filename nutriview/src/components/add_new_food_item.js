@@ -8,12 +8,11 @@ import React, {Component} from 'react';
 // Class-based component:
 class AddNewFoodItem extends Component {
   render() {
-    console.log('AddnewFoodItemRender');
     return (
       <form className="form-inline" onSubmit={event => event.preventDefault()}>
         <div className="form-group">
           <input className="form-control" placeholder="Food item" type="text" id="search" autofocus />
-          <button className="btn btn-default" onClick={() => this.onButtonClick()}>Add Food Item</button>
+          <button className="btn btn-default" onClick={(e) => {e.preventDefault(); this.onButtonClick();}}>Add Food Item</button>
         </div>
       </form>
     );
@@ -25,8 +24,7 @@ class AddNewFoodItem extends Component {
     if (!search) {
       return;
     }
-    var selectedDate = this.props.selectedDate;
-    this.props.onAddFood(search, selectedDate);
+    this.props.onAddFood(search, this.props.selectedDate);
   }
 
 }

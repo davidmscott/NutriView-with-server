@@ -1,23 +1,30 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import AddNewFoodItem from './add_new_food_item';
 import FoodSummary from './food_summary';
 import FoodList from './food_list';
 
-const Foods = (props) => {
-  return (
-    <div>
-      <FoodSummary summary={props.state.summary} />
-      <AddNewFoodItem
-        onAddFood={props.onAddFood}
-        selectedDate={props.state.selectedDate}
-      />
-      <FoodList
-        foodItems={props.state.foodItems}
-        onDeleteFood={props.onDeleteFood}
-      />
-    </div>
-  );
+class Foods extends Component {
+  constructor(props) {
+    super(props)
+
+    this.props.onGetFoods();
+  }
+  render() {
+    return (
+      <div>
+        <FoodSummary summary={this.props.state.summary} />
+        <AddNewFoodItem
+          onAddFood={this.props.onAddFood}
+          selectedDate={this.props.state.selectedDate}
+        />
+        <FoodList
+          foodItems={this.props.state.foodItems}
+          onDeleteFood={this.props.onDeleteFood}
+        />
+      </div>
+    );
+  }
 };
 
 export default Foods;
