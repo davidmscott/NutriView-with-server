@@ -116,6 +116,10 @@ class App extends Component {
     });
   }
 
+  setRoute(route) {
+    this.setState({route});
+  }
+
   render() {
     if (this.state.route === 'login') {
       return (
@@ -133,6 +137,7 @@ class App extends Component {
             onAddDate={dateInput => this.addDate(dateInput)}
             onGetDates={() => this.getDates()}
             onDeleteDate={date => this.deleteDate(date)}
+            onSetRoute={route => this.setRoute(route)}
           />
       );
     }
@@ -144,6 +149,7 @@ class App extends Component {
             onAddFood={(search, selectedDate) => this.addFood(search, selectedDate)}
             onDeleteFood={id => this.deleteFood(id)}
             onGetFoods={() => this.getFoods()}
+            onSetRoute={route => this.setRoute(route)}
           />
       );
     }
