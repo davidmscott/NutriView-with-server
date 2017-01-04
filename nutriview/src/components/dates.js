@@ -19,6 +19,7 @@ class Dates extends Component {
         <DateList
           dateItems={this.props.state.dateItems}
           onDeleteDate={this.props.onDeleteDate}
+          onAddDate={this.props.onAddDate}
         />
       </div>
     );

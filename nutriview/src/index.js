@@ -88,7 +88,9 @@ class App extends Component {
 
   addDate(dateInput) {
     //validate dateInput is the format I want it to be
-    var updatedDateItems = [...this.state.dateItems, dateInput]
+    if (this.state.dateItems.indexOf(dateInput) === -1) {
+      var updatedDateItems = [...this.state.dateItems, dateInput]
+    }
     this.setState({
       dateItems: updatedDateItems,
       selectedDate: dateInput,

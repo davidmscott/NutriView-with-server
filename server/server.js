@@ -109,7 +109,6 @@ app.post('/removedate', (req, res) => {
 });
 
 app.post('/user', (req, res) => {
-  console.log('post /user req', req.body.username, req.body.password);
   var user = new User({
     username: req.body.username,
     password: req.body.password
