@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 
 var FoodItem = mongoose.model('FoodItem', {
 	user: {
-		type: String,
-		required: true,
-		minlength: 1,
-		trim: true
+		type: mongoose.Schema.Types.ObjectId,
+		required: true
 	},
 	date: {
 		type: Number,

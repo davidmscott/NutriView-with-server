@@ -4,11 +4,14 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "request": "^2.79.0",
+    "jsonwebtoken": "^7.2.1",
     "mongodb": "^2.2.16",
-    "mongoose": "^4.7.5"
+    "mongoose": "^4.7.5",
+    "request": "^2.79.0",
+    "validator": "^6.2.0"
   },
   "devDependencies": {},
   "scripts": {

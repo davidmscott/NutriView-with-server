@@ -116,6 +116,20 @@ class App extends Component {
     });
   }
 
+  // tryToRegister(register) {
+  //   axios.post(`http://localhost:8000/user`, register).then((response) => {
+  //     console.log(response);
+  //     this.setState({route: 'dates'});
+  //   });
+  // }
+
+  tryToRegister(register) {
+    $.post(`http://localhost:8000/user`, register, (res) => {
+      console.log('register res', res);
+      this.setState({route: 'dates'});
+    }).fail(error => alert('Unable to register username and password.'));
+  }
+
   setRoute(route) {
     this.setState({route});
   }
@@ -126,6 +140,7 @@ class App extends Component {
           <Login
             state={this.state}
             onLogin={login => this.tryToLogin(login)}
+            onRegister={register => this.tryToRegister(register)}
           />
       );
     }

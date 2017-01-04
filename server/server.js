@@ -7,6 +7,7 @@ const {ObjectID} = require('mongodb');
 const {mongoose} = require('./db/mongoose.js');
 const {User} = require('./models/user.js');
 const {FoodItem} = require('./models/foodItem.js');
+const {authenticate} = require('./middleware/authenticate.js');
 
 const app = express();
 
@@ -29,7 +30,7 @@ var apiKey = '9c762c838016043633065dcee0261687';
 var apiId = 'ab3d9cfa';
 var baseUrl = `https://api.edamam.com/api/nutrition-data?app_id=${apiId}&app_key=${apiKey}&ingr=`;
 
-app.get('/food', (req, res) => {
+app.get('/food', authenticate, (req, res) => {
 	// res.setHeader('Access-Control-Allow-Origin', '*');
 	// res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 	// res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
@@ -43,7 +44,8 @@ app.get('/food', (req, res) => {
 		}
 
 		var foodItem = new FoodItem({
-			user: req.query.user,
+			// user: req.query.user,
+      user: req.user._id,
 			date,
 			foodDetail: JSON.stringify(response)
 		});
@@ -56,16 +58,19 @@ app.get('/food', (req, res) => {
 	});
 });
 
-app.get('/foods', (req, res) => {
-	FoodItem.find({date: req.query.date}).then((foodList) => {
+app.get('/foods', authenticate, (req, res) => {
+	FoodItem.find({
+    date: req.query.date,
+    user: req.user._id  //added
+  }).then((foodList) => {
 		res.send({foodList});
 	}, (error) => {
 		res.status(400).send(error);
 	})
 });
 
-app.get('/dates', (req, res) => {
-	FoodItem.find().then((foodList) => {
+app.get('/dates', authenticate, (req, res) => {
+	FoodItem.find({user: req.user._id}).then((foodList) => { //added
 		var dateList = foodList.map((foodItem) => {
 			return foodItem.date;
 		});
@@ -78,8 +83,11 @@ app.get('/dates', (req, res) => {
 	});
 });
 
-app.post('/removefood', (req, res) => {
-	FoodItem.findByIdAndRemove(req.body.id).then((food) => {
+app.post('/removefood', authenticate, (req, res) => {
+	FoodItem.findOneAndRemove({ //was findByIdAndRemove
+    _id: req.body.id,
+    user: req.user._id //added
+  }).then((food) => {
 		if (!food) {
 			return res.status(404).send();
 		}
@@ -90,11 +98,47 @@ app.post('/removefood', (req, res) => {
 });
 
 app.post('/removedate', (req, res) => {
-	FoodItem.remove({date: req.body.date}).then((result) => {
-		res.send(result.result);
+	FoodItem.remove({
+    date: req.body.date,
+    user: req.user._id //added
+  }).then((res) => {
+		res.send(res.result);
 	}).catch((error) => {
 		res.status(400).send(error);
 	});
+});
+
+app.post('/user', (req, res) => {
+  console.log('post /user req', req.body.username, req.body.password);
+  var user = new User({
+    username: req.body.username,
+    password: req.body.password
+  });
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((error) => {
+    res.status(400).send(error);
+  });
+});
+
+app.post('/user/login', (req, res) => {
+  User.findByCredentials(body.email, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(user);
+    });
+  }).catch((error) => {
+    res.status(400).send();
+  });
+});
+
+app.post('/user/logout', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, () => {
+    res.status(400).send();
+  });
 });
 
 app.listen(port, () => {
