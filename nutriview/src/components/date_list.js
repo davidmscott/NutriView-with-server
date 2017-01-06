@@ -11,6 +11,7 @@ const DateList = (props) => {
         dateItem={dateItem}
         onDeleteDate={props.onDeleteDate}
         onAddDate={props.onAddDate}
+        onGetFoods={props.onGetFoods}
       />
     );
   });

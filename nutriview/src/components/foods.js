@@ -14,7 +14,10 @@ class Foods extends Component {
   render() {
     return (
       <div>
-        <NavBar onSetRoute={this.props.onSetRoute} />
+        <NavBar
+          onSetRoute={this.props.onSetRoute}
+          onLogout={this.props.onLogout}
+        />
         <FoodSummary summary={this.props.state.summary} />
         <AddNewFoodItem
           onAddFood={this.props.onAddFood}

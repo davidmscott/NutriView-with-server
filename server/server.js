@@ -22,7 +22,8 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-auth");
+  res.header("Access-Control-Expose-Headers", "x-auth");
   next();
 });
 
@@ -97,7 +98,7 @@ app.post('/removefood', authenticate, (req, res) => {
 	});
 });
 
-app.post('/removedate', (req, res) => {
+app.post('/removedate', authenticate, (req, res) => {
 	FoodItem.remove({
     date: req.body.date,
     user: req.user._id //added
@@ -123,7 +124,7 @@ app.post('/user', (req, res) => {
 });
 
 app.post('/user/login', (req, res) => {
-  User.findByCredentials(body.email, body.password).then((user) => {
+  User.findByCredentials(req.body.username, req.body.password).then((user) => {
     return user.generateAuthToken().then((token) => {
       res.header('x-auth', token).send(user);
     });
@@ -134,6 +135,14 @@ app.post('/user/login', (req, res) => {
 
 app.post('/user/logout', authenticate, (req, res) => {
   req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, () => {
+    res.status(400).send();
+  });
+});
+
+app.post('/user/logout', authenticate, (req, res) => {
+  User.findOne({username: req.user}).removeToken(req.token).then(() => {
     res.status(200).send();
   }, () => {
     res.status(400).send();

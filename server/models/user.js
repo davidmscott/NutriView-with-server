@@ -67,7 +67,7 @@ UserSchema.statics.findByToken = function(token) {
 	var decoded;
 
 	try {
-		decoded = jwt.verfiy(token, 'secret');
+		decoded = jwt.verify(token, 'secret');
 	} catch (error) {
 		return Promise.reject();
 	}
@@ -75,13 +75,13 @@ UserSchema.statics.findByToken = function(token) {
 	return User.findOne({
 		_id: decoded._id,
 		'tokens.token': token,
-		'tokens.acces': 'auth'
+		'tokens.access': 'auth'
 	});
 };
 
-UserSchema.statics.findByCredentials = function(email, password) {
+UserSchema.statics.findByCredentials = function(username, password) {
 	var User = this;
-	return User.findOne({email}).then((user) => {
+	return User.findOne({username}).then((user) => {
 		if (!user) {
 			return Promise.reject();
 		}

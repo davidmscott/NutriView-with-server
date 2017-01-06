@@ -14,12 +14,16 @@ class Dates extends Component {
   render() {
     return (
       <div>
-        <NavBar onSetRoute={this.props.onSetRoute} />
+        <NavBar
+          onSetRoute={this.props.onSetRoute}
+          onLogout={this.props.onLogout}
+        />
         <AddNewDateItem onAddDate={this.props.onAddDate} />
         <DateList
           dateItems={this.props.state.dateItems}
           onDeleteDate={this.props.onDeleteDate}
           onAddDate={this.props.onAddDate}
+          onGetFoods={this.props.onGetFoods}
         />
       </div>
     );
