@@ -5,6 +5,9 @@ import Login from './components/login';
 import Dates from './components/dates';
 import Foods from './components/foods';
 
+const path = 'http://localhost:8000';
+// const path = 'https://nutriview-server.herokuapp.com/';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -25,51 +28,6 @@ class App extends Component {
     };
   }
 
-  // addFood(search, selectedDate) {
-  //   var data = {
-  //     search,
-  //     selectedDate,
-  //     user: this.state.user
-  //   };
-  //   $.get(`http://localhost:8000/food`, data, (res) => {
-  //     var newFood = JSON.parse(JSON.parse(res.foodDetail).body);
-  //     newFood.id = res._id;
-  //     var updatedFoodItems = [newFood, ...this.state.foodItems];
-  //
-  //     if (updatedFoodItems.length > 1) {
-  //       var fat = updatedFoodItems.reduce((a, b) => {
-  //         return ( a.totalDaily ? ( a.totalDaily.FAT ? a.totalDaily.FAT.quantity : 0 ) : a ) + ( b.totalDaily.FAT ? b.totalDaily.FAT.quantity : 0 );
-  //       });
-  //       var carbohydrates = updatedFoodItems.reduce((a, b) => {
-  //         return ( a.totalDaily ? ( a.totalDaily.CHOCDF ? a.totalDaily.CHOCDF.quantity : 0 ) : a ) + ( b.totalDaily.CHOCDF ? b.totalDaily.CHOCDF.quantity : 0 );
-  //       });
-  //       var protein = updatedFoodItems.reduce((a, b) => {
-  //         return ( a.totalDaily ? ( a.totalDaily.PROCNT ? a.totalDaily.PROCNT.quantity : 0 ) : a ) + ( b.totalDaily.PROCNT ? b.totalDaily.PROCNT.quantity : 0 );
-  //       });
-  //       var calories = updatedFoodItems.reduce((a, b) => {
-  //         return ( a.calories ? a.calories : ( a.calories == 0 ? a.calories : a )) + b.calories;
-  //       });
-  //     } else {
-  //       var fat = updatedFoodItems[0].totalDaily.FAT ? updatedFoodItems[0].totalDaily.FAT.quantity : 0;
-  //       var carbohydrates = updatedFoodItems[0].totalDaily.CHOCDF ? updatedFoodItems[0].totalDaily.CHOCDF.quantity : 0;
-  //       var protein = updatedFoodItems[0].totalDaily.PROCNT ? updatedFoodItems[0].totalDaily.PROCNT.quantity : 0;
-  //       var calories = updatedFoodItems[0].calories;
-  //     }
-  //
-  //     var newSummary = {
-  //       fat,
-  //       carbohydrates,
-  //       protein,
-  //       calories
-  //     };
-  //
-  //     this.setState({
-  //       foodItems: updatedFoodItems,
-  //       summary: newSummary,
-  //     });
-  //   }).fail(error => alert('No results found.  The Nutritionix API works best with searches like "1 large apple" or "8 ounce milk" as opposed to "apples".'));
-  // }
-
   addFood(search, selectedDate) {
     var data = {
       search,
@@ -78,40 +36,14 @@ class App extends Component {
     };
     $.ajax({
       method: 'GET',
-      url: 'http://localhost:8000/food',
+      url: `${path}/food`,
       headers: {'x-auth': this.state.token},
       data,
       success: (res, status, xhr) => {
         var newFood = JSON.parse(JSON.parse(res.foodDetail).body);
         newFood.id = res._id;
         var updatedFoodItems = [newFood, ...this.state.foodItems];
-
-        if (updatedFoodItems.length > 1) {
-          var fat = updatedFoodItems.reduce((a, b) => {
-            return ( a.totalDaily ? ( a.totalDaily.FAT ? a.totalDaily.FAT.quantity : 0 ) : a ) + ( b.totalDaily.FAT ? b.totalDaily.FAT.quantity : 0 );
-          });
-          var carbohydrates = updatedFoodItems.reduce((a, b) => {
-            return ( a.totalDaily ? ( a.totalDaily.CHOCDF ? a.totalDaily.CHOCDF.quantity : 0 ) : a ) + ( b.totalDaily.CHOCDF ? b.totalDaily.CHOCDF.quantity : 0 );
-          });
-          var protein = updatedFoodItems.reduce((a, b) => {
-            return ( a.totalDaily ? ( a.totalDaily.PROCNT ? a.totalDaily.PROCNT.quantity : 0 ) : a ) + ( b.totalDaily.PROCNT ? b.totalDaily.PROCNT.quantity : 0 );
-          });
-          var calories = updatedFoodItems.reduce((a, b) => {
-            return ( a.calories ? a.calories : ( a.calories == 0 ? a.calories : a )) + b.calories;
-          });
-        } else {
-          var fat = updatedFoodItems[0].totalDaily.FAT ? updatedFoodItems[0].totalDaily.FAT.quantity : 0;
-          var carbohydrates = updatedFoodItems[0].totalDaily.CHOCDF ? updatedFoodItems[0].totalDaily.CHOCDF.quantity : 0;
-          var protein = updatedFoodItems[0].totalDaily.PROCNT ? updatedFoodItems[0].totalDaily.PROCNT.quantity : 0;
-          var calories = updatedFoodItems[0].calories;
-        }
-
-        var newSummary = {
-          fat,
-          carbohydrates,
-          protein,
-          calories
-        };
+        var newSummary = this.summarize(updatedFoodItems);
 
         this.setState({
           foodItems: updatedFoodItems,
@@ -121,16 +53,10 @@ class App extends Component {
     }).fail(error => alert('No results found.  The Nutritionix API works best with searches like "1 large apple" or "8 ounce milk" as opposed to "apples".'));
   }
 
-  // deleteFood(id) {
-  //   $.post(`http://localhost:8000/removefood`, {id}, (res) => {
-  //     this.getFoods(this.state.selectedDate);
-  //   }).fail(error => alert('Unable to delete entry from the database.'));
-  // }
-
   deleteFood(id) {
     $.ajax({
       method: "POST",
-      url:`http://localhost:8000/removefood`,
+      url: `${path}/removefood`,
       headers: {'x-auth': this.state.token},
       data: {id},
       success: (data, status, xhr) => {
@@ -139,62 +65,55 @@ class App extends Component {
     }).fail(error => alert('Unable to delete entry from the database.'));
   }
 
-  // getFoods() {
-  //   $.get(`http://localhost:8000/foods`, {date: this.state.selectedDate}, (res) => {
-  //     var updatedFoodItems = res.foodList.map(foodItem => {
-  //       var newFood = JSON.parse(JSON.parse(foodItem.foodDetail).body);
-  //       newFood.id = foodItem._id;
-  //       return newFood;
-  //     });
-  //     this.setState({foodItems: updatedFoodItems});
-  //   });
-  // }
+  summarize(foodItemArray) {
+    if (foodItemArray.length > 1) {
+      var fat = foodItemArray.reduce((a, b) => {
+        return ( a.totalDaily ? ( a.totalDaily.FAT ? a.totalDaily.FAT.quantity : 0 ) : a ) + ( b.totalDaily.FAT ? b.totalDaily.FAT.quantity : 0 );
+      });
+      var carbohydrates = foodItemArray.reduce((a, b) => {
+        return ( a.totalDaily ? ( a.totalDaily.CHOCDF ? a.totalDaily.CHOCDF.quantity : 0 ) : a ) + ( b.totalDaily.CHOCDF ? b.totalDaily.CHOCDF.quantity : 0 );
+      });
+      var protein = foodItemArray.reduce((a, b) => {
+        return ( a.totalDaily ? ( a.totalDaily.PROCNT ? a.totalDaily.PROCNT.quantity : 0 ) : a ) + ( b.totalDaily.PROCNT ? b.totalDaily.PROCNT.quantity : 0 );
+      });
+      var calories = foodItemArray.reduce((a, b) => {
+        return ( a.calories ? a.calories : ( a.calories == 0 ? a.calories : a )) + b.calories;
+      });
+    } else {
+      var fat = foodItemArray[0].totalDaily.FAT ? foodItemArray[0].totalDaily.FAT.quantity : 0;
+      var carbohydrates = foodItemArray[0].totalDaily.CHOCDF ? foodItemArray[0].totalDaily.CHOCDF.quantity : 0;
+      var protein = foodItemArray[0].totalDaily.PROCNT ? foodItemArray[0].totalDaily.PROCNT.quantity : 0;
+      var calories = foodItemArray[0].calories;
+    }
+
+    var newSummary = {
+      fat,
+      carbohydrates,
+      protein,
+      calories
+    };
+
+    return newSummary;
+  }
 
   getFoods(date) {
     if (date === undefined) {
-      console.log('date = undefined');
       var date = this.state.selectedDate;
     }
     $.ajax({
       method: 'GET',
-      url: 'http://localhost:8000/foods',
+      url: `${path}/foods`,
       headers: {'x-auth': this.state.token},
-      // data: {date: this.state.selectedDate},
       data: {date},
       success: (res, status, xhr) => {
-        console.log(date);
         var updatedFoodItems = res.foodList.map(foodItem => {
           var newFood = JSON.parse(JSON.parse(foodItem.foodDetail).body);
           newFood.id = foodItem._id;
           return newFood;
         });
         if (updatedFoodItems.length > 0) {
-          if (updatedFoodItems.length > 1) {
-            var fat = updatedFoodItems.reduce((a, b) => {
-              return ( a.totalDaily ? ( a.totalDaily.FAT ? a.totalDaily.FAT.quantity : 0 ) : a ) + ( b.totalDaily.FAT ? b.totalDaily.FAT.quantity : 0 );
-            });
-            var carbohydrates = updatedFoodItems.reduce((a, b) => {
-              return ( a.totalDaily ? ( a.totalDaily.CHOCDF ? a.totalDaily.CHOCDF.quantity : 0 ) : a ) + ( b.totalDaily.CHOCDF ? b.totalDaily.CHOCDF.quantity : 0 );
-            });
-            var protein = updatedFoodItems.reduce((a, b) => {
-              return ( a.totalDaily ? ( a.totalDaily.PROCNT ? a.totalDaily.PROCNT.quantity : 0 ) : a ) + ( b.totalDaily.PROCNT ? b.totalDaily.PROCNT.quantity : 0 );
-            });
-            var calories = updatedFoodItems.reduce((a, b) => {
-              return ( a.calories ? a.calories : ( a.calories == 0 ? a.calories : a )) + b.calories;
-            });
-          } else {
-            var fat = updatedFoodItems[0].totalDaily.FAT ? updatedFoodItems[0].totalDaily.FAT.quantity : 0;
-            var carbohydrates = updatedFoodItems[0].totalDaily.CHOCDF ? updatedFoodItems[0].totalDaily.CHOCDF.quantity : 0;
-            var protein = updatedFoodItems[0].totalDaily.PROCNT ? updatedFoodItems[0].totalDaily.PROCNT.quantity : 0;
-            var calories = updatedFoodItems[0].calories;
-          }
+          var newSummary = this.summarize(updatedFoodItems);
 
-          var newSummary = {
-            fat,
-            carbohydrates,
-            protein,
-            calories
-          };
           this.setState({
             foodItems: updatedFoodItems,
             summary: newSummary,
@@ -234,17 +153,10 @@ class App extends Component {
     });
   }
 
-  // getDates() {
-  //   $.get(`http://localhost:8000/dates`, (res) => {
-  //     var updatedDateItems = [...res.dateList];
-  //     this.setState({dateItems: updatedDateItems});
-  //   });
-  // }
-
   getDates() {
     $.ajax({
       method: 'GET',
-      url: 'http://localhost:8000/dates',
+      url: `${path}/dates`,
       headers: {'x-auth': this.state.token},
       success: (res, status, xhr) => {
         var updatedDateItems = [...res.dateList];
@@ -256,16 +168,10 @@ class App extends Component {
     }).fail(error => alert('Unable to fetch dates.'));
   }
 
-  // deleteDate(date) {
-  //   $.post(`http://localhost:8000/removedate`, {date}, (res) => {
-  //     this.getDates();
-  //   }).fail(error => alert('Unable to delete entry from the database.'));
-  // }
-
   deleteDate(date) {
     $.ajax({
       method: "POST",
-      url:`http://localhost:8000/removedate`,
+      url: `${path}/removedate`,
       headers: {'x-auth': this.state.token},
       data: {date},
       success: (data, status, xhr) => {
@@ -274,31 +180,10 @@ class App extends Component {
     }).fail(error => alert('Unable to delete entry from the database.'));
   }
 
-  // tryToLogin(login) {
-  //   this.setState({
-  //     user: login.username,
-  //     route: 'dates'
-  //   });
-  // }
-
-  // tryToRegister(register) {
-  //   axios.post(`http://localhost:8000/user`, register).then((response) => {
-  //     console.log(response);
-  //     this.setState({route: 'dates'});
-  //   });
-  // }
-
-  // tryToRegister(register) {
-  //   $.post(`http://localhost:8000/user`, register, (res) => {
-  //     console.log('register res', res.headers('x-auth'));
-  //     this.setState({route: 'dates'});
-  //   }).fail(error => alert('Unable to register username and password.'));
-  // }
-
   tryToLogin(login) {
     $.ajax({
       method: "POST",
-      url:`http://localhost:8000/user/login`,
+      url:`${path}/user/login`,
       data: login,
       success: (res, status, xhr) => {
         this.setState({
@@ -313,7 +198,7 @@ class App extends Component {
   tryToRegister(register) {
     $.ajax({
       method: "POST",
-      url:`http://localhost:8000/user`,
+      url:`${path}/user`,
       data: register,
       success: (res, status, xhr) => {
         this.setState({
@@ -327,7 +212,7 @@ class App extends Component {
   logout() {
     $.ajax({
       method: "POST",
-      url:`http://localhost:8000/user/logout`,
+      url:`${path}/user/logout`,
       headers: {'x-auth': this.state.token},
       data: {
         user: this.state.username,
@@ -355,6 +240,14 @@ class App extends Component {
   setRoute(route) {
     switch (route) {
       case 'dates':
+        if (this.state.route === 'dates') {
+          return;
+        }
+        if (this.state.route === 'foods' && this.state.foodItems.length === 0) {
+          if (confirm('Date will not be saved because it contains no entries.\nLeave page anyway?') === false) {
+            return;
+          }
+        }
         this.setState({
           route,
           selectedDate: null

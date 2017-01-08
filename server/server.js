@@ -1,8 +1,10 @@
+require('./config/config.js');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
+const _ = require('lodash');
 const {ObjectID} = require('mongodb');
-// const moment = require('moment') after installing moment for date formatting
 
 const {mongoose} = require('./db/mongoose.js');
 const {User} = require('./models/user.js');
@@ -11,7 +13,7 @@ const {authenticate} = require('./middleware/authenticate.js');
 
 const app = express();
 
-var port = process.env.PORT || 8000;
+var port = process.env.PORT;
 
 app.use(express.static(__dirname));
 
@@ -27,25 +29,20 @@ app.use((req, res, next) => {
   next();
 });
 
-var apiKey = '9c762c838016043633065dcee0261687';
-var apiId = 'ab3d9cfa';
-var baseUrl = `https://api.edamam.com/api/nutrition-data?app_id=${apiId}&app_key=${apiKey}&ingr=`;
+var baseUrl = `https://api.edamam.com/api/nutrition-data?app_id=${process.env.API_ID}&app_key=${process.env.API_KEY}&ingr=`;
 
 app.get('/food', authenticate, (req, res) => {
-	// res.setHeader('Access-Control-Allow-Origin', '*');
-	// res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-	// res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,contenttype');
-	// res.setHeader('Access-Control-Allow-Credentials', true);
 	var term = req._parsedUrl.query;
 	var url = `${baseUrl}${term}`;
 	var date = req.query.selectedDate || Date.now();
 	request(url, (error, response, body) => {
-		if (!JSON.parse(body).ingredients[0].parsed || JSON.parse(body).ingredients[0].parsed[0].quantity == 0) {
-			res.status(404).send();
-		}
+    var responseBody = JSON.parse(body);
+    if (!responseBody.ingredients[0].parsed || responseBody.ingredients[0].parsed[0].quantity == 0 || _.isEmpty(responseBody.totalDaily)) {
+      res.status(404).send();
+      return;
+    }
 
 		var foodItem = new FoodItem({
-			// user: req.query.user,
       user: req.user._id,
 			date,
 			foodDetail: JSON.stringify(response)
@@ -62,7 +59,7 @@ app.get('/food', authenticate, (req, res) => {
 app.get('/foods', authenticate, (req, res) => {
 	FoodItem.find({
     date: req.query.date,
-    user: req.user._id  //added
+    user: req.user._id
   }).then((foodList) => {
 		res.send({foodList});
 	}, (error) => {
@@ -71,7 +68,7 @@ app.get('/foods', authenticate, (req, res) => {
 });
 
 app.get('/dates', authenticate, (req, res) => {
-	FoodItem.find({user: req.user._id}).then((foodList) => { //added
+	FoodItem.find({user: req.user._id}).then((foodList) => {
 		var dateList = foodList.map((foodItem) => {
 			return foodItem.date;
 		});
@@ -85,9 +82,9 @@ app.get('/dates', authenticate, (req, res) => {
 });
 
 app.post('/removefood', authenticate, (req, res) => {
-	FoodItem.findOneAndRemove({ //was findByIdAndRemove
+	FoodItem.findOneAndRemove({
     _id: req.body.id,
-    user: req.user._id //added
+    user: req.user._id
   }).then((food) => {
 		if (!food) {
 			return res.status(404).send();
@@ -101,7 +98,7 @@ app.post('/removefood', authenticate, (req, res) => {
 app.post('/removedate', authenticate, (req, res) => {
 	FoodItem.remove({
     date: req.body.date,
-    user: req.user._id //added
+    user: req.user._id
   }).then((res) => {
 		res.send(res.result);
 	}).catch((error) => {
