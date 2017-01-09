@@ -50,7 +50,7 @@ class App extends Component {
           summary: newSummary,
         });
       }
-    }).fail(error => alert('No results found.  The Nutritionix API works best with searches like "1 large apple" or "8 ounce milk" as opposed to "apples".'));
+    }).fail(error => alert('No results found.  The Nutritionix API works best with searches like "1 large apple" or "8 ounce milk" as opposed to searches such as "apple".'));
   }
 
   deleteFood(id) {
@@ -138,7 +138,7 @@ class App extends Component {
           }
         }
       }
-    }).fail(error => alert('Unable to get foods for selected date.'));
+    }).fail(error => alert('Unable to get foods for selected collection.', error));
   }
 
   addDate(dateInput) {
@@ -165,7 +165,7 @@ class App extends Component {
           selectedDate: null
         });
       }
-    }).fail(error => alert('Unable to fetch dates.'));
+    }).fail(error => alert('Unable to fetch list of collections.'));
   }
 
   deleteDate(date) {
@@ -177,7 +177,7 @@ class App extends Component {
       success: (data, status, xhr) => {
         this.getDates();
       }
-    }).fail(error => alert('Unable to delete entry from the database.'));
+    }).fail(error => alert('Unable to delete collection from the database.'));
   }
 
   tryToLogin(login) {
@@ -244,7 +244,7 @@ class App extends Component {
           return;
         }
         if (this.state.route === 'foods' && this.state.foodItems.length === 0) {
-          if (confirm('Date will not be saved because it contains no entries.\nLeave page anyway?') === false) {
+          if (confirm('Food collection will not be saved because it contains no entries.\nLeave page anyway?') === false) {
             return;
           }
         }
@@ -300,4 +300,4 @@ class App extends Component {
 
 };
 
-ReactDOM.render(<App />, document.querySelector('.container'));
+ReactDOM.render(<App />, document.querySelector('.react'));

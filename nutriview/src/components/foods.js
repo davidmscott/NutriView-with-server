@@ -17,16 +17,23 @@ class Foods extends Component {
         <NavBar
           onSetRoute={this.props.onSetRoute}
           onLogout={this.props.onLogout}
+          showDatesLink={true}
         />
-        <FoodSummary summary={this.props.state.summary} />
         <AddNewFoodItem
           onAddFood={this.props.onAddFood}
           selectedDate={this.props.state.selectedDate}
         />
-        <FoodList
-          foodItems={this.props.state.foodItems}
-          onDeleteFood={this.props.onDeleteFood}
-        />
+        <div className="container">
+          <div className="row">
+            <FoodList
+              foodItems={this.props.state.foodItems}
+              onDeleteFood={this.props.onDeleteFood}
+            />
+            <FoodSummary
+              summary={this.props.state.summary}
+            />
+          </div>
+        </div>
       </div>
     );
   }

@@ -6,11 +6,12 @@ var FoodItem = mongoose.model('FoodItem', {
 		required: true
 	},
 	date: {
-		type: Number,
+		type: String,
 		required: true
 	},
 	foodDetail: {
-
+		type: String,
+		required: true
 	}
 });
 

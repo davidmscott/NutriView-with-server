@@ -3,10 +3,10 @@ import React, {Component} from 'react';
 class AddNewDateItem extends Component {
   render() {
     return (
-      <form className="form-inline" onSubmit={event => event.preventDefault()}>
+      <form style={{"margin": "4vh"}} className="form-inline" onSubmit={event => event.preventDefault()}>
         <div className="form-group">
-          <input className="form-control" placeholder="Date item" type="text" id="date-input" autofocus />
-          <button className="btn btn-default" onClick={(e) => {e.preventDefault(); this.onButtonClick();}}>Add Date Item</button>
+          <input className="form-control" placeholder="Collection name" type="text" id="date-input" autofocus />
+          <button className="btn btn-default" onClick={(e) => {e.preventDefault(); this.onButtonClick();}}>Create New Food Collection</button>
         </div>
       </form>
     );

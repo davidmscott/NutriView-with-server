@@ -2,10 +2,10 @@ import React from 'react';
 
 const DateListItem = (props) => {
   return (
-    <li>
-      <button onClick={() => props.onGetFoods(props.dateItem)}>{props.dateItem}</button>
-      <button onClick={() => props.onDeleteDate(props.dateItem)}>X</button>
-    </li>
+    <div className="btn-group" style={{"margin": "2vh"}}>
+      <button className="btn btn-info" onClick={() => props.onGetFoods(props.dateItem)}>{props.dateItem}</button>
+      <button className="btn btn-danger" onClick={() => props.onDeleteDate(props.dateItem)}>X</button>
+    </div>
   );
 };
 

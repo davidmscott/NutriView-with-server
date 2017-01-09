@@ -3,10 +3,20 @@ import React, {Component} from 'react';
 class FoodListItem extends Component {
   render() {
     return (
-      <div>
-        <li ref="pieChart">
-        </li>
-        <button onClick={() => this.props.onDeleteFood(this.props.id)}>X</button>
+      <div style={{"display": "inline-block", "backgroundColor": "white", "borderRadius": "1vh", "margin": "2vh"}}>
+        <div className="panel panel-default">
+          <div className="panel-heading" ref="chartTitle">
+            <button
+              onClick={() => this.props.onDeleteFood(this.props.id)}
+              className="btn btn-danger"
+              style={{"float": "right"}}
+            >X</button>
+          </div>
+          <div className="panel-body">
+            <div ref="pieChart"></div>
+          </div>
+          <div className="panel-footer text-center" ref="chartFooter"></div>
+        </div>
       </div>
     );
   }
@@ -46,7 +56,7 @@ class FoodListItem extends Component {
       foodDesc = '';
     }
 
-    $(this.refs.pieChart).prepend('<h4>' + 'Calories: ' + calories + '</h4>');
+    $(this.refs.chartFooter).append('<h4 style="font-weight: 200;">' + 'Calories: ' + calories + '</h4>');
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
     // var color = d3.scaleOrdinal()
@@ -88,7 +98,7 @@ class FoodListItem extends Component {
           .duration(200)
           .style('opacity', 1);
         div
-          .html(d.data.label + ': ' + d.data.percent.toFixed(1) + '%')
+          .html(d.data.label + ': ' + d.data.percent.toFixed(1) + '% of RDA')
           .style('left', d3.event.layerX + 20 + 'px')
           .style('top', d3.event.layerY - 10 + 'px');
         d3.select(this)
@@ -193,7 +203,7 @@ class FoodListItem extends Component {
       .attr('y', legendRectSize - legendSpacing)
       .text(function(d) { return d; });
 
-    $(this.refs.pieChart).prepend('<h2>' + foodDesc + '</h2>').css('textTransform', 'capitalize');
+    $(this.refs.chartTitle).prepend('<h3 class="panel-title" style="font-weight: 200; display: inline; margin: 1vh 0 0 2vh; float: left;">' + foodDesc + '</h3>').css('textTransform', 'capitalize');
   }
 
 }

@@ -3,8 +3,18 @@ import React, {Component} from 'react';
 class FoodSummary extends Component {
   render() {
     return (
-      <div ref="summaryChart">
-        {this.showSummary()}
+      <div className="col-md-6 text-center">
+        <div style={{"display": "inline-block", "backgroundColor": "white", "borderRadius": "1vh", "margin": "2vh"}}>
+          <div className="panel panel-default">
+            <div className="panel-heading" ref="chartTitle"></div>
+            <div className="panel-body">
+              <div ref="summaryChart">
+                {this.showSummary()}
+              </div>
+            </div>
+            <div className="panel-footer text-center" ref="chartFooter"></div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -70,7 +80,7 @@ class FoodSummary extends Component {
           .duration(200)
           .style('opacity', 1);
         div
-          .html(d.data.label + ': ' + d.data.percent.toFixed(1) + '%')
+          .html(d.data.label + ': ' + d.data.percent.toFixed(1) + '% of RDA')
           .style('left', d3.event.layerX + 20 + 'px')
           .style('top', d3.event.layerY - 10 + 'px');
         d3.select(this)
@@ -165,13 +175,12 @@ class FoodSummary extends Component {
       .attr('y', legendRectSize - legendSpacing)
       .text(function(d) { return d; });
 
-    $(this.refs.summaryChart).prepend('<h2>' + 'Total Daily Amounts' + '</h2>');
-    $(this.refs.summaryChart).append('<h4>' + 'Calories: ' + caloriesTotal + '</h4>');
+    $(this.refs.chartTitle).html('<h3 class="panel-title" style="font-weight: 400; margin: 1vh 0 0 0">' + 'Total Daily Amounts' + '</h3>');
+    $(this.refs.chartFooter).html('<h4 style="font-weight: 400">' + 'Calories: ' + caloriesTotal + '</h4>');
 
-    var svg2 = d3.select('svg')
+    var svg2 = d3.select(this.refs.summaryChart).select('svg')
       .append('g')
-      .attr('transform', 'translate(' + (width / 2) +
-        ',' + (height / 2) + ')');
+      .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
 
     var arc2 = d3.arc()
       .innerRadius(insideRadius + 100)

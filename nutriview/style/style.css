@@ -1,0 +1,12 @@
+.legend {
+  font-size: 12px;
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  color: #FFFFFF;
+  background-color: #525252;
+  border-radius: 10px;
+  padding: 5px;
+}

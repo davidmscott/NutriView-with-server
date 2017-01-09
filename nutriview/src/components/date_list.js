@@ -17,9 +17,10 @@ const DateList = (props) => {
   });
 
   return (
-    <ul>
+    <div className="col-md-6">
+      <h4 style={{"color": "white",}}>View / Edit an Existing Collection:</h4>
       {dates}
-    </ul>
+    </div>
   );
 };
 

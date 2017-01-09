@@ -16,9 +16,9 @@ const FoodList = (props) => {
   });
 
   return (
-    <ul>
+    <div className="col-md-6 text-center">
       {foods}
-    </ul>
+    </div>
   );
 };
 
