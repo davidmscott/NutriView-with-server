@@ -34,9 +34,9 @@ class FoodListItem extends Component {
     var quantity = responseBody.ingredients[0].parsed[0].quantity;
     var measure = responseBody.ingredients[0].parsed[0].measure;
     var totalDaily = responseBody.totalDaily;
-    dataset[0].percent = totalDaily.FAT ? totalDaily.FAT.quantity : 0;
+    dataset[2].percent = totalDaily.FAT ? totalDaily.FAT.quantity : 0;
     dataset[1].percent = totalDaily.CHOCDF ? totalDaily.CHOCDF.quantity : 0;
-    dataset[2].percent = totalDaily.PROCNT ? totalDaily.PROCNT.quantity : 0;
+    dataset[0].percent = totalDaily.PROCNT ? totalDaily.PROCNT.quantity : 0;
     var width = 400;
     var height = 400;
     var radius = Math.min(width, height) / 2;

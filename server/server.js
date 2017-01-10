@@ -72,9 +72,18 @@ app.get('/dates', authenticate, (req, res) => {
 		var dateList = foodList.map((foodItem) => {
 			return foodItem.date;
 		});
-		dateList = dateList.filter((date, index) => {
+		var dateListSummary = dateList.filter((date, index) => {
 			return dateList.indexOf(date) === index;
 		});
+    dateList = dateListSummary.map((date) => {
+      var count = 0;
+      for (var i = 0; i < dateList.length; i++) {
+        if (dateList[i] === date) {
+          count++;
+        }
+      }
+      return {date, count};
+    });
 		res.send({dateList});
 	}, (error) => {
 		res.status(400).send(error);
@@ -99,8 +108,8 @@ app.post('/removedate', authenticate, (req, res) => {
 	FoodItem.remove({
     date: req.body.date,
     user: req.user._id
-  }).then((res) => {
-		res.send(res.result);
+  }).then((value) => {
+		res.send(res.value);
 	}).catch((error) => {
 		res.status(400).send(error);
 	});

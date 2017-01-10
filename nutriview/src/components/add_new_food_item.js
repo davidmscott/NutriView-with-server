@@ -3,12 +3,19 @@ import React, {Component} from 'react';
 class AddNewFoodItem extends Component {
   render() {
     return (
-      <form style={{"margin": "4vh"}} className="form-inline" onSubmit={event => event.preventDefault()}>
-        <div className="form-group">
-          <input className="form-control" placeholder="Food item" type="text" id="search" autofocus />
-          <button className="btn btn-default" onClick={(e) => {e.preventDefault(); this.onButtonClick();}}>Add Food To Collection</button>
+      <div className="container">
+        <div style={{"marginTop": "2vh"}} className="row text-center">
+          <form style={{"display": "inline-block"}} className="col-md-12 col-lg-6 form-inline" onSubmit={event => event.preventDefault()}>
+            <div style={{"display": "inline-block"}} className="form-group text-center">
+              <input className="form-control" placeholder="Food item" type="text" id="search" autofocus />
+              <button className="btn btn-default" onClick={(e) => {e.preventDefault(); this.onButtonClick();}}>Add Food To Collection</button>
+            </div>
+          </form>
+          <div style={{"color": "white", "display": "flex", "align-items": "center", "justify-content": "center"}} className="col-md-12 col-lg-6">
+            *Be specific for best results (e.g. '1 large apple')
+          </div>
         </div>
-      </form>
+      </div>
     );
   }
 

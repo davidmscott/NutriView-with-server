@@ -17,18 +17,16 @@ class Dates extends Component {
         <NavBar
           onSetRoute={this.props.onSetRoute}
           onLogout={this.props.onLogout}
-          showDatesLink={false}
+          state={this.props.state}
         />
         <AddNewDateItem onAddDate={this.props.onAddDate} />
-        <div className="container">
-          <div className="row">
+        <div className="container" style={{"marginTop": "4vh"}}>
             <DateList
               dateItems={this.props.state.dateItems}
               onDeleteDate={this.props.onDeleteDate}
               onAddDate={this.props.onAddDate}
               onGetFoods={this.props.onGetFoods}
             />
-          </div>
         </div>
       </div>
     );

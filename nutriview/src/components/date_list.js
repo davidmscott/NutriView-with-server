@@ -3,12 +3,12 @@ import React from 'react';
 import DateListItem from './date_list_item';
 
 const DateList = (props) => {
-  // use index as key only as a last resort --refactor if better key is possible
   const dates = props.dateItems.map((dateItem, index) => {
     return (
       <DateListItem
         key={index}
-        dateItem={dateItem}
+        date={dateItem.date}
+        count={dateItem.count}
         onDeleteDate={props.onDeleteDate}
         onAddDate={props.onAddDate}
         onGetFoods={props.onGetFoods}
@@ -17,8 +17,8 @@ const DateList = (props) => {
   });
 
   return (
-    <div className="col-md-6">
-      <h4 style={{"color": "white",}}>View / Edit an Existing Collection:</h4>
+    <div>
+      <h2 className="text-center" style={{"color": "white",}}>View / Edit an Existing Collection:</h2>
       {dates}
     </div>
   );

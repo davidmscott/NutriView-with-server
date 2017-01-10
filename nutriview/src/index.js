@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import Login from './components/login';
+import About from './components/about';
 import Dates from './components/dates';
 import Foods from './components/foods';
 
@@ -142,7 +143,6 @@ class App extends Component {
   }
 
   addDate(dateInput) {
-    //validate dateInput is the format I want it to be
     if (this.state.dateItems.indexOf(dateInput) === -1) {
       var updatedDateItems = [...this.state.dateItems, dateInput]
     }
@@ -192,7 +192,7 @@ class App extends Component {
           route: 'dates'
         });
       }
-    }).fail(error => alert('Unable to login.'));
+    }).fail(error => alert('Unable to login.\n\nValid email address and minimum password length of 6 characters required.'));
   }
 
   tryToRegister(register) {
@@ -206,7 +206,7 @@ class App extends Component {
           route: 'dates'
         });
       }
-    }).fail(error => alert('Unable to register.'));
+    }).fail(error => alert('Unable to register.\n\nValid email address and minimum password length of 6 characters required.'));
   }
 
   logout() {
@@ -244,7 +244,7 @@ class App extends Component {
           return;
         }
         if (this.state.route === 'foods' && this.state.foodItems.length === 0) {
-          if (confirm('Food collection will not be saved because it contains no entries.\nLeave page anyway?') === false) {
+          if (confirm('Food collection will not be saved because it contains no entries.\n\nLeave page anyway?') === false) {
             return;
           }
         }
@@ -254,6 +254,12 @@ class App extends Component {
         });
         break;
       case 'foods':
+        this.setState({route});
+        break;
+      case 'about':
+        this.setState({route});
+        break;
+      case 'login':
         this.setState({route});
         break;
     }
@@ -266,6 +272,20 @@ class App extends Component {
             state={this.state}
             onLogin={login => this.tryToLogin(login)}
             onRegister={register => this.tryToRegister(register)}
+            onSetRoute={route => this.setRoute(route)}
+            onLogout={() => this.logout()}
+          />
+      );
+    }
+
+    if (this.state.route === 'about') {
+      return (
+          <About
+            state={this.state}
+            onLogin={login => this.tryToLogin(login)}
+            onRegister={register => this.tryToRegister(register)}
+            onSetRoute={route => this.setRoute(route)}
+            onLogout={() => this.logout()}
           />
       );
     }

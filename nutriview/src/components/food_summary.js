@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 class FoodSummary extends Component {
   render() {
     return (
-      <div className="col-md-6 text-center">
+      <div className="col-sm-12 col-lg-6 text-center">
         <div style={{"display": "inline-block", "backgroundColor": "white", "borderRadius": "1vh", "margin": "2vh"}}>
           <div className="panel panel-default">
             <div className="panel-heading" ref="chartTitle"></div>
@@ -41,8 +41,6 @@ class FoodSummary extends Component {
     var legendSpacing = 4;
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
-    // var color = d3.scaleOrdinal()
-    // 	.range(['#A60F2B', '#648C85', '#B3F2C9', '#528C18', '#C3F25C']);
 
     var svg = d3.select(this.refs.summaryChart)
       .insert('svg',':first-child')
@@ -175,7 +173,7 @@ class FoodSummary extends Component {
       .attr('y', legendRectSize - legendSpacing)
       .text(function(d) { return d; });
 
-    $(this.refs.chartTitle).html('<h3 class="panel-title" style="font-weight: 400; margin: 1vh 0 0 0">' + 'Total Daily Amounts' + '</h3>');
+    $(this.refs.chartTitle).html('<h3 class="panel-title" style="font-weight: 400; margin: 1vh 0 0 0">' + 'Collection Summary' + '</h3>');
     $(this.refs.chartFooter).html('<h4 style="font-weight: 400">' + 'Calories: ' + caloriesTotal + '</h4>');
 
     var svg2 = d3.select(this.refs.summaryChart).select('svg')

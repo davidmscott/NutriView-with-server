@@ -17,12 +17,15 @@ class Foods extends Component {
         <NavBar
           onSetRoute={this.props.onSetRoute}
           onLogout={this.props.onLogout}
-          showDatesLink={true}
+          state={this.props.state}
         />
         <AddNewFoodItem
           onAddFood={this.props.onAddFood}
           selectedDate={this.props.state.selectedDate}
         />
+        <div className="container">
+          <h2 className="text-center" style={{"color": "white", "marginTop": "4vh"}}>Collection: {this.props.state.selectedDate}</h2>
+        </div>
         <div className="container">
           <div className="row">
             <FoodList
