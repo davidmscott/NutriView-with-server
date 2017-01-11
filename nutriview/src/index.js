@@ -6,8 +6,8 @@ import About from './components/about';
 import Dates from './components/dates';
 import Foods from './components/foods';
 
-// const path = 'http://localhost:8000';
-const path = 'https://nutriview-server.herokuapp.com/';
+const path = 'http://localhost:8000';
+// const path = 'https://nutriview-server.herokuapp.com';
 
 class App extends Component {
   constructor(props) {

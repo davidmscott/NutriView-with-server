@@ -8,7 +8,7 @@ const {ObjectID} = require('mongodb');
 
 const {mongoose} = require('./db/mongoose.js');
 const {User} = require('./models/user.js');
-const {FoodItem} = require('./models/foodItem.js');
+const {FoodItem} = require('./models/fooditem.js');
 const {authenticate} = require('./middleware/authenticate.js');
 
 const app = express();
