@@ -2,7 +2,7 @@ import React from 'react';
 
 const NavBar = (props) => {
   return (
-    <div className="navbar navbar-default navbar-fixed-top" style={{"backgroundColor": "white"}}>
+    <div className="navbar navbar-default fixed-top" style={{"backgroundColor": "white", "borderBottom": "2px solid #5cb85c"}}>
       <div className="container">
         <div className="navbar-header">
           <div className="navbar-brand" style={{"color": "#5cb85c", "fontWeight": "bold"}}>
