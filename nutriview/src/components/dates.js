@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import NavBar from './nav_bar';
 import AddNewDateItem from './add_new_date_item';
 import DateList from './date_list';
+import LineChart from './line_chart';
 
 class Dates extends Component {
   constructor(props) {
@@ -20,13 +21,14 @@ class Dates extends Component {
           state={this.props.state}
         />
         <AddNewDateItem onAddDate={this.props.onAddDate} />
+        <LineChart onGetDetailedDates={this.props.onGetDetailedDates}/>
         <div className="container" style={{"marginTop": "4vh"}}>
-            <DateList
-              dateItems={this.props.state.dateItems}
-              onDeleteDate={this.props.onDeleteDate}
-              onAddDate={this.props.onAddDate}
-              onGetFoods={this.props.onGetFoods}
-            />
+          <DateList
+            dateItems={this.props.state.dateItems}
+            onDeleteDate={this.props.onDeleteDate}
+            onAddDate={this.props.onAddDate}
+            onGetFoods={this.props.onGetFoods}
+          />
         </div>
       </div>
     );

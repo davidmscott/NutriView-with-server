@@ -17,6 +17,7 @@ class App extends Component {
     this.state = {
       foodItems: [],
       dateItems: [],
+      DatesInfo: [],
       summary: {
         fat: 0,
         carbohydrates: 0,
@@ -28,6 +29,35 @@ class App extends Component {
       token: null,
       route: 'login'
     };
+  }
+
+  getDetailedDates() {
+    var dateItems = this.state.dateItems;
+    var detailedDateList = [];
+    dateItems.forEach((date) => {
+      $.ajax({
+        method: 'GET',
+        url: `${path}/foods`,
+        headers: {'x-auth': this.state.token},
+        data: {date: date.date},
+        success: (res, status, xhr) => {
+          var updatedFoodItems = res.foodList.map(foodItem => {
+            var newFood = JSON.parse(JSON.parse(foodItem.foodDetail).body);
+            return newFood;
+          });
+          if (updatedFoodItems.length > 0) {
+            var newSummary = this.summarize(updatedFoodItems);
+            newSummary.date = date.date;
+            detailedDateList.push(newSummary);
+          }
+        }
+      });
+    });
+    // return detailedDateList;
+    console.log(detailedDateList);
+    this.setState({
+      DatesInfo: detailedDateList
+    });
   }
 
   addFood(search, selectedDate) {
@@ -307,6 +337,7 @@ class App extends Component {
             onSetRoute={route => this.setRoute(route)}
             onLogout={() => this.logout()}
             onGetFoods={date => this.getFoods(date)}
+            onGetDetailedDates={() => this.getDetailedDates()}
           />
         </div>
       );
