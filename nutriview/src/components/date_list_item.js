@@ -5,7 +5,7 @@ const DateListItem = (props) => {
     <div className="container">
       <div className="row" style={{"margin": "2vh"}}>
         <div className="col-sm-8 col-md-6">
-          <button className="btn btn-info btn-block" onClick={() => props.onGetFoods(props.date)}>Name: {props.date}</button>
+          <button className="btn btn-info btn-block" onClick={() => props.onGetFoods(props.date)}>{props.date}</button>
         </div>
         <div className="hidden-sm-down col-md-3">
           <button className="btn btn-info btn-block" onClick={() => props.onGetFoods(props.date)}>Items: {props.count}</button>

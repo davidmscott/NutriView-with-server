@@ -18,7 +18,7 @@ const DateList = (props) => {
 
   return (
     <div>
-      <h2 className="text-center" style={{"color": "white",}}>View / Edit an Existing Collection:</h2>
+      <h2 className="text-center" style={{"color": "white",}}>View / Edit an Existing Date:</h2>
       {dates}
     </div>
   );

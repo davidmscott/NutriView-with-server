@@ -24,7 +24,7 @@ class Foods extends Component {
           selectedDate={this.props.state.selectedDate}
         />
         <div className="container">
-          <h2 className="text-center" style={{"color": "white", "marginTop": "4vh"}}>Collection: {this.props.state.selectedDate}</h2>
+          <h2 className="text-center" style={{"color": "white", "marginTop": "4vh"}}>Collection for {this.props.state.selectedDate}</h2>
         </div>
         <div className="container">
           <div className="row">

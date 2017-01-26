@@ -178,7 +178,7 @@ class App extends Component {
       success: (data, status, xhr) => {
         this.getDates();
       }
-    }).fail(error => Popup.alert('Unable to delete collection from the database.'));
+    }).fail(error => Popup.alert('Unable to delete date from the database.'));
   }
 
   tryToLogin(login) {
