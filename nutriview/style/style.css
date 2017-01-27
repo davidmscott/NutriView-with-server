@@ -203,3 +203,9 @@ body {
         margin-top: 10px;
     }
 }
+
+.line {
+  fill: none;
+  stroke-width: 2px;
+  stroke: black;
+}

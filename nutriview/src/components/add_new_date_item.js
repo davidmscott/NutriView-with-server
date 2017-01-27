@@ -4,13 +4,16 @@ class AddNewDateItem extends Component {
   render() {
     return (
       <div className="container">
-        <div style={{"marginTop": "2vh"}} className="row text-center">
-          <form style={{"display": "inline-block"}} className="col-md-12 col-lg-6 form-inline" onSubmit={event => event.preventDefault()}>
+        <div className="row text-center">
+          <form style={{"display": "inline-block", "marginTop": "2vh"}} className="col-md-12 col-lg-6 form-inline" onSubmit={event => event.preventDefault()}>
             <div style={{"display": "inline-block"}} className="form-group text-center">
               <input className="form-control" placeholder="Click to select date" type="text" id="date-input" readOnly />
               <button className="btn btn-default" onClick={(e) => {e.preventDefault(); this.onButtonClick();}}>Create New Date Collection</button>
             </div>
           </form>
+          <div style={{"color": "white", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginTop": "2vh"}} className="col-md-12 col-lg-6">
+            <button className="btn btn-default" onClick={() => {this.props.onToggleChart();}}>Toggle Nutrition Chart</button>
+          </div>
         </div>
       </div>
     );

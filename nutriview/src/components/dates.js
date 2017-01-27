@@ -20,8 +20,14 @@ class Dates extends Component {
           onLogout={this.props.onLogout}
           state={this.props.state}
         />
-        <AddNewDateItem onAddDate={this.props.onAddDate} />
-        <LineChart onGetDetailedDates={this.props.onGetDetailedDates}/>
+        <AddNewDateItem
+          onAddDate={this.props.onAddDate}
+          onToggleChart={this.props.onToggleChart}
+        />
+        <LineChart
+          state={this.props.state}
+          onGetDetailedDates={this.props.onGetDetailedDates}
+        />
         <div className="container" style={{"marginTop": "4vh"}}>
           <DateList
             dateItems={this.props.state.dateItems}

@@ -17,7 +17,8 @@ class App extends Component {
     this.state = {
       foodItems: [],
       dateItems: [],
-      DatesInfo: [],
+      datesInfo: [],
+      toggleChart: true,
       summary: {
         fat: 0,
         carbohydrates: 0,
@@ -31,9 +32,10 @@ class App extends Component {
     };
   }
 
-  getDetailedDates() {
+  getDetailedDates(cb) {
     var dateItems = this.state.dateItems;
     var detailedDateList = [];
+
     dateItems.forEach((date) => {
       $.ajax({
         method: 'GET',
@@ -45,18 +47,24 @@ class App extends Component {
             var newFood = JSON.parse(JSON.parse(foodItem.foodDetail).body);
             return newFood;
           });
+
           if (updatedFoodItems.length > 0) {
             var newSummary = this.summarize(updatedFoodItems);
             newSummary.date = date.date;
             detailedDateList.push(newSummary);
+            detailedDateList.sort(function(a,b) {
+              return new Date(a.date).getTime() - new Date(b.date).getTime();
+            });
+            this.setState({
+              datesInfo: detailedDateList,
+              route: 'dates'
+            });
+            // return detailedDateList;
+            cb();
           }
+
         }
       });
-    });
-    // return detailedDateList;
-    console.log(detailedDateList);
-    this.setState({
-      DatesInfo: detailedDateList
     });
   }
 
@@ -191,6 +199,9 @@ class App extends Component {
       headers: {'x-auth': this.state.token},
       success: (res, status, xhr) => {
         var updatedDateItems = [...res.dateList];
+        updatedDateItems.sort(function(a,b) {
+          return new Date(a.date).getTime() - new Date(b.date).getTime()
+        });
         this.setState({
           dateItems: updatedDateItems,
           selectedDate: null
@@ -338,6 +349,7 @@ class App extends Component {
             onLogout={() => this.logout()}
             onGetFoods={date => this.getFoods(date)}
             onGetDetailedDates={() => this.getDetailedDates()}
+            onToggleChart={() => {this.toggleChart = !this.toggleChart; console.log(this.toggleChart);}}
           />
         </div>
       );
