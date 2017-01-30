@@ -17,8 +17,6 @@ class App extends Component {
     this.state = {
       foodItems: [],
       dateItems: [],
-      datesInfo: [],
-      toggleChart: true,
       summary: {
         fat: 0,
         carbohydrates: 0,
@@ -32,7 +30,7 @@ class App extends Component {
     };
   }
 
-  getDetailedDates(cb) {
+  getDetailedDates() {
     var dateItems = this.state.dateItems;
     var detailedDateList = [];
 
@@ -59,10 +57,7 @@ class App extends Component {
               datesInfo: detailedDateList,
               route: 'dates'
             });
-            // return detailedDateList;
-            cb();
           }
-
         }
       });
     });
@@ -206,6 +201,7 @@ class App extends Component {
           dateItems: updatedDateItems,
           selectedDate: null
         });
+        this.getDetailedDates();
       }
     }).fail(error => Popup.alert('Unable to fetch list of collections.'));
   }
@@ -349,7 +345,6 @@ class App extends Component {
             onLogout={() => this.logout()}
             onGetFoods={date => this.getFoods(date)}
             onGetDetailedDates={() => this.getDetailedDates()}
-            onToggleChart={() => {this.toggleChart = !this.toggleChart; console.log(this.toggleChart);}}
           />
         </div>
       );
