@@ -33,12 +33,14 @@ class Dates extends Component {
         />
         <div className="container hidden-sm-down chart" style={{"marginTop": "2vh"}}>
           <div className="text-center">
+            <div ref="chartMessage" style={{"color": "white", "display": "flex", "alignItems": "center", "justifyContent": "center"}}></div>
             <div style={{"display": "inline-block", "backgroundColor": "white", "borderRadius": "1vh", "margin": "2vh"}}>
               <div className="panel panel-default">
-                <div className="panel-heading" ref="chartTitle"></div>
+                <div className="panel-heading">
+                  <h3 ref="chartTitle" style={{"marginTop": "1vh", "marginBottom": 0}}></h3>
+                </div>
                 <div className="panel-body">
-                  <div ref="lineChart" className="thisChart">
-                  </div>
+                  <div ref="lineChart" className="thisChart"></div>
                 </div>
                 <div className="panel-footer text-center" ref="chartFooter"></div>
               </div>
@@ -48,7 +50,7 @@ class Dates extends Component {
         <div className="container" style={{"marginTop": "2vh"}}>
           <DateList
             dateItems={this.props.state.dateItems}
-            onDeleteDate={this.props.onDeleteDate}
+            onDeleteDate={this.deleteDate.bind(this)}
             onAddDate={this.props.onAddDate}
             onGetFoods={this.props.onGetFoods}
           />
@@ -146,43 +148,54 @@ class Dates extends Component {
 
   createChart() {
 
-  var margin = {top: 20, right: 50, bottom: 30, left: 50},
+    d3.select("svg").remove();
+
+    if (this.state.datesInfo.length > 1) {
+      d3.select(this.refs.chartTitle).html("Source of Calories by Day");
+      d3.select(this.refs.chartMessage).html("");
+    } else {
+      d3.select(this.refs.chartTitle).html("");
+      d3.select(this.refs.chartMessage).html("*You must have at least 2 dates to populate chart");
+      return;
+    }
+
+    var margin = {top: 20, right: 80, bottom: 50, left: 65},
       width = 960 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
-  var parseDate = d3.timeParse("%m/%d/%Y");
+    var parseDate = d3.timeParse("%m/%d/%Y");
 
-  var x = d3.scaleTime()
-      .range([0, width])
+    var x = d3.scaleTime()
+      .range([0, width]);
 
-  var y = d3.scaleLinear()
+    var y = d3.scaleLinear()
       .range([height, 0]);
 
-  var xAxis = d3.axisBottom()
+    var xAxis = d3.axisBottom()
       .scale(x);
 
-  var yAxis = d3.axisLeft()
+    var yAxis = d3.axisLeft()
       .scale(y);
 
-  var protein = d3.line()
+    var protein = d3.line()
       .x(function(d) { return x(d.date); })
       .y(function(d) { return y(d.protein); });
 
-  var carbs = d3.line()
+    var carbs = d3.line()
       .x(function(d) { return x(d.date); })
       .y(function(d) { return y(d.carbohydrates); });
 
-  var fat = d3.line()
+    var fat = d3.line()
       .x(function(d) { return x(d.date); })
       .y(function(d) { return y(d.fat); });
 
-  var svg = d3.select(this.refs.lineChart).append("svg")
+    var svg = d3.select(this.refs.lineChart).append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  var data = this.state.datesInfo.map(function(d) {
+    var data = this.state.datesInfo.map(function(d) {
       return {
          date: parseDate(d.date),
          protein: d.protein,
@@ -193,34 +206,70 @@ class Dates extends Component {
     });
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return Math.max(d.protein, d.carbohydrates, d.fat); })]);
+    y.domain([0, d3.max(data, function(d) { return Math.max(d.protein, d.carbohydrates, d.fat)*1.1; })]);
 
     svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
 
     svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
+      .attr("class", "y axis")
+      .call(yAxis);
 
     svg.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .style("stroke", "#1f77b4")
-        .attr("d", protein);
+      .datum(data)
+      .attr("class", "line")
+      .style("stroke", "#1f77b4")
+      .attr("d", protein);
 
     svg.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .style("stroke", "#ff7f0e")
-        .attr("d", carbs);
+      .datum(data)
+      .attr("class", "line")
+      .style("stroke", "#ff7f0e")
+      .attr("d", carbs);
 
     svg.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .style("stroke", "#2ca02c")
-        .attr("d", fat);
+      .datum(data)
+      .attr("class", "line")
+      .style("stroke", "#2ca02c")
+      .attr("d", fat);
+
+    if (this.state.datesInfo.length > 1) {
+      svg.append("text")
+        .attr("transform", "translate(" + ( width + 3 ) + "," + y( data[data.length-1].protein ) + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "#1f77b4")
+        .text("Protein");
+
+      svg.append("text")
+        .attr("transform", "translate(" + ( width + 3 ) + "," + y( data[data.length-1].carbohydrates ) + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "#ff7f0e")
+        .text("Carbs");
+
+      svg.append("text")
+        .attr("transform", "translate(" + ( width + 3 ) + "," + y( data[data.length-1].fat ) + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "#2ca02c")
+        .text("Fat");
+    }
+
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1.5em")
+        .style("text-anchor", "middle")
+        .text("% of RDA");
+
+    svg.append("text")
+      .attr("transform", "translate(" + (width / 2) + "," + (height + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Date");
 
   }
 
@@ -238,11 +287,19 @@ class Dates extends Component {
     }
   }
 
+  deleteDate(date) {
+    $.ajax({
+      method: "POST",
+      url: `${path}/removedate`,
+      headers: {'x-auth': this.props.state.token},
+      data: {date},
+      success: (data, status, xhr) => {
+        this.props.onGetDates();
+        this.getDates();
+      }
+    }).fail(error => Popup.alert('Unable to delete date from the database.'));
+  }
+
 };
 
 export default Dates;
-
-// <LineChart
-//   state={this.props.state}
-//   onGetDetailedDates={this.props.onGetDetailedDates}
-// />
