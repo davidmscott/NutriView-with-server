@@ -75,7 +75,6 @@ class Dates extends Component {
       var update_height = Math.round(update_width * 50 / 96);
       this.setState({ chartWidth: update_width, chartHeight: update_height });
       this.createChart();
-      console.log(window.innerWidth);
   }
 
   getDetailedDates(cb) {
@@ -191,6 +190,7 @@ class Dates extends Component {
       .range([height, 0]);
 
     var xAxis = d3.axisBottom()
+      .ticks(d3.timeDay.every(1))
       .scale(x);
 
     var yAxis = d3.axisLeft()
@@ -225,7 +225,7 @@ class Dates extends Component {
     });
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return Math.max(d.protein, d.carbohydrates, d.fat)*1.1; })]);
+    y.domain([0, d3.max(data, function(d) { return Math.max(d.protein, d.carbohydrates, d.fat) * 1.1; })]);
 
     svg.append("g")
       .attr("class", "x axis")
@@ -253,6 +253,30 @@ class Dates extends Component {
       .attr("class", "line")
       .style("stroke", "#2ca02c")
       .attr("d", fat);
+
+    svg.selectAll("dot")
+      .data(data)
+      .enter().append("circle")
+      .style("fill", "#1f77b4")
+      .attr("r", 2.5)
+      .attr("cx", function(d) { return x(d.date); })
+      .attr("cy", function(d) { return y(d.protein); });
+
+    svg.selectAll("dot")
+      .data(data)
+      .enter().append("circle")
+      .style("fill", "#ff7f0e")
+      .attr("r", 2.5)
+      .attr("cx", function(d) { return x(d.date); })
+      .attr("cy", function(d) { return y(d.carbohydrates); });
+
+    svg.selectAll("dot")
+      .data(data)
+      .enter().append("circle")
+      .style("fill", "#2ca02c")
+      .attr("r", 2.5)
+      .attr("cx", function(d) { return x(d.date); })
+      .attr("cy", function(d) { return y(d.fat); });
 
     if (this.state.datesInfo.length > 1) {
       svg.append("text")
