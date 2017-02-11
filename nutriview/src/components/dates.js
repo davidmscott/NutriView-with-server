@@ -12,7 +12,9 @@ class Dates extends Component {
 
     this.state = {
       datesInfo: [],
-      showChart: true
+      showChart: true,
+      chartWidth: 960,
+      chartHeight: 500
     };
 
     this.props.onGetDates();
@@ -31,10 +33,10 @@ class Dates extends Component {
           onAddDate={this.props.onAddDate}
           onToggleChart={this.toggleChart.bind(this)}
         />
-        <div className="container hidden-sm-down chart" style={{"marginTop": "2vh"}}>
-          <div className="text-center">
-            <div ref="chartMessage" style={{"color": "white", "display": "flex", "alignItems": "center", "justifyContent": "center"}}></div>
-            <div style={{"display": "inline-block", "backgroundColor": "white", "borderRadius": "1vh", "margin": "2vh"}}>
+        <div className="chart">
+          <div ref="chartMessage" style={{"color": "white", "textAlign": "center", "marginTop": "2vh"}}></div>
+          <div className="container hidden-sm-down" style={{"marginTop": "2vh", "marginLeft": "10vw", "marginRight": "10vw", "padding": "0"}}>
+            <div style={{"display": "inline-block", "backgroundColor": "white", "borderRadius": "1vh", "marginTop": "2vh", "marginBottom": "2vh"}} className="text-center">
               <div className="panel panel-default">
                 <div className="panel-heading">
                   <h3 ref="chartTitle" style={{"marginTop": "1vh", "marginBottom": 0}}></h3>
@@ -57,6 +59,23 @@ class Dates extends Component {
         </div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  updateDimensions() {
+      var update_width = window.innerWidth * 0.8;
+      var update_height = Math.round(update_width * 50 / 96);
+      this.setState({ chartWidth: update_width, chartHeight: update_height });
+      this.createChart();
+      console.log(window.innerWidth);
   }
 
   getDetailedDates(cb) {
@@ -160,8 +179,8 @@ class Dates extends Component {
     }
 
     var margin = {top: 20, right: 80, bottom: 50, left: 65},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      width = this.state.chartWidth - margin.left - margin.right,
+      height = this.state.chartHeight - margin.top - margin.bottom;
 
     var parseDate = d3.timeParse("%m/%d/%Y");
 
