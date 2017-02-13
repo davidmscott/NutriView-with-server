@@ -33,9 +33,9 @@ class Dates extends Component {
           onAddDate={this.props.onAddDate}
           onToggleChart={this.toggleChart.bind(this)}
         />
-        <div className="chart">
+        <div className="chart hidden-sm-down">
           <div ref="chartMessage" style={{"color": "white", "textAlign": "center", "marginTop": "2vh"}}></div>
-          <div className="container hidden-sm-down" style={{"marginTop": "2vh", "marginLeft": "10vw", "marginRight": "10vw", "padding": "0"}}>
+          <div className="container" style={{"marginTop": "2vh", "marginLeft": "10vw", "marginRight": "10vw", "padding": "0"}}>
             <div style={{"display": "inline-block", "backgroundColor": "white", "borderRadius": "1vh", "marginTop": "2vh", "marginBottom": "2vh"}} className="text-center">
               <div className="panel panel-default">
                 <div className="panel-heading">

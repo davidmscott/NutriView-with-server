@@ -209,3 +209,9 @@ body {
   stroke-width: 2px;
   stroke: black;
 }
+
+@media (min-width: 768px) {
+    .sm-center-md-left {
+        text-align: left;
+    }
+}
