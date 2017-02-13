@@ -17,6 +17,7 @@ class Dates extends Component {
       chartHeight: 500
     };
 
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.props.onGetDates();
     this.getDates();
   }
@@ -63,11 +64,11 @@ class Dates extends Component {
 
   componentDidMount() {
     this.updateDimensions();
-    window.addEventListener("resize", this.updateDimensions.bind(this));
+    window.addEventListener("resize", this.updateDimensions);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions.bind(this));
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
   updateDimensions() {
