@@ -14,7 +14,8 @@ class Dates extends Component {
       datesInfo: [],
       showChart: true,
       chartWidth: 960,
-      chartHeight: 500
+      chartHeight: 500,
+      hasDisplayed: false
     };
 
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -222,7 +223,6 @@ class Dates extends Component {
          carbohydrates: d.carbohydrates,
          fat: d.fat
       };
-
     });
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
@@ -237,23 +237,62 @@ class Dates extends Component {
       .attr("class", "y axis")
       .call(yAxis);
 
-    svg.append("path")
-      .datum(data)
-      .attr("class", "line")
-      .style("stroke", "#1f77b4")
-      .attr("d", protein);
+    if (!this.state.hasDisplayed) {
 
-    svg.append("path")
-      .datum(data)
-      .attr("class", "line")
-      .style("stroke", "#ff7f0e")
-      .attr("d", carbs);
+      this.setState({ hasDisplayed: true })
 
-    svg.append("path")
-      .datum(data)
-      .attr("class", "line")
-      .style("stroke", "#2ca02c")
-      .attr("d", fat);
+      svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "#1f77b4")
+        .attr("d", protein)
+        .attr("stroke-dasharray", function(d){ return this.getTotalLength() })
+        .attr("stroke-dashoffset", function(d){ return this.getTotalLength() });
+
+      svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "#ff7f0e")
+        .attr("d", carbs)
+        .attr("stroke-dasharray", function(d){ return this.getTotalLength() })
+        .attr("stroke-dashoffset", function(d){ return this.getTotalLength() });
+
+      svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "#2ca02c")
+        .attr("d", fat)
+        .attr("stroke-dasharray", function(d){ return this.getTotalLength() })
+        .attr("stroke-dashoffset", function(d){ return this.getTotalLength() });
+
+      var t = d3.transition()
+        .duration(1000)
+        .ease(d3.easeLinear);
+
+      svg.selectAll(".line").transition(t)
+          .attr("stroke-dashoffset", 0);
+
+    } else {
+
+      svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "#1f77b4")
+        .attr("d", protein);
+
+      svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "#ff7f0e")
+        .attr("d", carbs);
+
+      svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "#2ca02c")
+        .attr("d", fat);
+
+    }
 
     svg.selectAll("dot")
       .data(data)
@@ -338,6 +377,7 @@ class Dates extends Component {
       headers: {'x-auth': this.props.state.token},
       data: {date},
       success: (data, status, xhr) => {
+        this.setState({ hasDisplayed: false });
         this.props.onGetDates();
         this.getDates();
       }
