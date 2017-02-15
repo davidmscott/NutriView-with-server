@@ -272,6 +272,46 @@ class Dates extends Component {
       svg.selectAll(".line").transition(t)
           .attr("stroke-dashoffset", 0);
 
+      svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .style("opacity", 0)
+        .style("fill", "#1f77b4")
+        .attr("r", 2.5)
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.protein); })
+        .transition()
+        .delay(1000)
+        .duration(500)
+        .style("opacity", 1);
+
+      svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .style("opacity", 0)
+        .style("fill", "#ff7f0e")
+        .attr("r", 2.5)
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.carbohydrates); })
+        .transition()
+        .delay(1000)
+        .duration(500)
+        .style("opacity", 1);
+
+      svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .style("opacity", 0)
+        .style("fill", "#2ca02c")
+        .attr("r", 2.5)
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.fat); })
+        .transition()
+        .delay(1000)
+        .duration(500)
+        .style("opacity", 1);
+
+
     } else {
 
       svg.append("path")
@@ -292,31 +332,31 @@ class Dates extends Component {
         .style("stroke", "#2ca02c")
         .attr("d", fat);
 
+      svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .style("fill", "#1f77b4")
+        .attr("r", 2.5)
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.protein); });
+
+      svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .style("fill", "#ff7f0e")
+        .attr("r", 2.5)
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.carbohydrates); });
+
+      svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .style("fill", "#2ca02c")
+        .attr("r", 2.5)
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.fat); });
+
     }
-
-    svg.selectAll("dot")
-      .data(data)
-      .enter().append("circle")
-      .style("fill", "#1f77b4")
-      .attr("r", 2.5)
-      .attr("cx", function(d) { return x(d.date); })
-      .attr("cy", function(d) { return y(d.protein); });
-
-    svg.selectAll("dot")
-      .data(data)
-      .enter().append("circle")
-      .style("fill", "#ff7f0e")
-      .attr("r", 2.5)
-      .attr("cx", function(d) { return x(d.date); })
-      .attr("cy", function(d) { return y(d.carbohydrates); });
-
-    svg.selectAll("dot")
-      .data(data)
-      .enter().append("circle")
-      .style("fill", "#2ca02c")
-      .attr("r", 2.5)
-      .attr("cx", function(d) { return x(d.date); })
-      .attr("cy", function(d) { return y(d.fat); });
 
     if (this.state.datesInfo.length > 1) {
       svg.append("text")
