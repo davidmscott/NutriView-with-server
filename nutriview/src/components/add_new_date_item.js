@@ -7,7 +7,7 @@ class AddNewDateItem extends Component {
         <div className="row text-center">
           <form style={{"display": "inline-block", "marginTop": "2vh"}} className="col-sm-12 col-md-8 col-lg-6 form-inline sm-center-md-left" onSubmit={event => event.preventDefault()}>
             <div style={{"display": "inline-block"}} className="form-group text-left">
-              <input className="form-control" placeholder="Click to select date" type="text" id="date-input" readOnly />
+              <input className="form-control" style={{"backgroundColor": "#fff"}} placeholder="Click to select date" type="text" id="date-input" readOnly />
               <button className="btn btn-default" onClick={(e) => {e.preventDefault(); this.onButtonClick();}}>Create New Date Collection</button>
             </div>
           </form>

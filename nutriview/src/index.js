@@ -30,6 +30,18 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    $('#overlay').hide();
+
+    $(document)
+      .ajaxStart(function () {
+        $('#overlay').show();
+      })
+      .ajaxStop(function () {
+        $('#overlay').hide();
+      });
+  }
+
   getDetailedDates() {
     var dateItems = this.state.dateItems;
     var detailedDateList = [];

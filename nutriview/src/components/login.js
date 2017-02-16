@@ -13,7 +13,8 @@ class Login extends Component {
         />
         <div className="row" style={{"paddingTop": "20vh"}}>
           <div className="col-md-4"></div>
-          <div className="col-md-4 col-md-offset-4" style={{"padding": "0"}}>
+          <div className="col-md-4 col-md-offset-4" style={{"padding": "0", "position": "relative"}}>
+            <img src="ajax-loader.gif" id="overlay" />
             <form className="form-signin" style={{"padding": "3vh", "backgroundColor": "white", "borderRadius": "1vh"}} onSubmit={e => e.preventDefault()}>
               <h2 className="form-signin-heading text-center" style={{"color": "#5cb85c"}}>Welcome to NutriView</h2>
               <input type="email" id="username" className="form-control" placeholder="Email address" required autoFocus />
