@@ -11,10 +11,10 @@ const NavBar = (props) => {
               Powered by <a href="http://www.nutritionix.com/api" target="_blank">Nutritionix API</a>
             </span>
           </div>
-          {!props.state.token && props.state.route !== 'login' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginRight": "2vh"}} onClick={() => props.onSetRoute('login')}>Login</button> : null}
-          {props.state.token && props.state.route !== 'login' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginRight": "2vh"}} onClick={() => props.onLogout()}>Logout</button> : null}
-          {props.state.token && props.state.route !== 'dates' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginRight": "2vh"}} onClick={() => props.onSetRoute('dates')}>Dates</button> : null}
-          {props.state.route !== 'about' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginRight": "2vh"}} onClick={() => props.onSetRoute('about')}>About</button> : null}
+          {!props.state.token && props.state.route !== 'login' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginLeft": "2vh"}} onClick={() => props.onSetRoute('login')}>Login</button> : null}
+          {props.state.token && props.state.route !== 'login' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginLeft": "2vh"}} onClick={() => props.onLogout()}>Logout</button> : null}
+          {props.state.token && props.state.route !== 'dates' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginLeft": "2vh"}} onClick={() => props.onSetRoute('dates')}>Dates</button> : null}
+          {props.state.route !== 'about' ? <button className="btn btn-success navbar-btn" style={{"float": "right", "marginLeft": "2vh"}} onClick={() => props.onSetRoute('about')}>About</button> : null}
         </div>
       </div>
     </div>

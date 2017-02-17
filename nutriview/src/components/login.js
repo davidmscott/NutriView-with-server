@@ -28,6 +28,18 @@ class Login extends Component {
     );
   }
 
+  componentDidMount() {
+    $('#overlay').hide();
+
+    $(document)
+      .ajaxStart(function () {
+        $('#overlay').show();
+      })
+      .ajaxStop(function () {
+        $('#overlay').hide();
+      });
+  }
+
   onLoginClick() {
     var loginInfo = {username: $('#username').val(), password: $('#password').val()};
     if (!loginInfo.username || !loginInfo.password) {
