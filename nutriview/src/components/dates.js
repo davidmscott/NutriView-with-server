@@ -237,6 +237,10 @@ class Dates extends Component {
       .attr("class", "y axis")
       .call(yAxis);
 
+    var div = d3.select(this.refs.lineChart).append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0);
+
     if (!this.state.hasDisplayed) {
 
       this.setState({ hasDisplayed: true })
@@ -280,6 +284,35 @@ class Dates extends Component {
         .attr("r", 2.5)
         .attr("cx", function(d) { return x(d.date); })
         .attr("cy", function(d) { return y(d.protein); })
+        .on('mouseover', function(d) {
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 1);
+          div
+            .html(d.protein.toFixed(1) + '%')
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px');
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr("r", 5);
+        })
+        .on('mouseout', function(d) {
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0);
+          d3.select(this)
+            .transition()
+            .duration(500)
+            .attr("r", 2.5);
+        })
+        .on('mousemove', function(d) {
+          div
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px')
+        })
         .transition()
         .delay(1000)
         .duration(500)
@@ -293,6 +326,35 @@ class Dates extends Component {
         .attr("r", 2.5)
         .attr("cx", function(d) { return x(d.date); })
         .attr("cy", function(d) { return y(d.carbohydrates); })
+        .on('mouseover', function(d) {
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 1);
+          div
+            .html(d.carbohydrates.toFixed(1) + '%')
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px');
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr("r", 5);
+        })
+        .on('mouseout', function(d) {
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0);
+          d3.select(this)
+            .transition()
+            .duration(500)
+            .attr("r", 2.5);
+        })
+        .on('mousemove', function(d) {
+          div
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px')
+        })
         .transition()
         .delay(1000)
         .duration(500)
@@ -306,6 +368,35 @@ class Dates extends Component {
         .attr("r", 2.5)
         .attr("cx", function(d) { return x(d.date); })
         .attr("cy", function(d) { return y(d.fat); })
+        .on('mouseover', function(d) {
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 1);
+          div
+            .html(d.fat.toFixed(1) + '%')
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px');
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr("r", 5);
+        })
+        .on('mouseout', function(d) {
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0);
+          d3.select(this)
+            .transition()
+            .duration(500)
+            .attr("r", 2.5);
+        })
+        .on('mousemove', function(d) {
+          div
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px')
+        })
         .transition()
         .delay(1000)
         .duration(500)
@@ -338,7 +429,36 @@ class Dates extends Component {
         .style("fill", "#1f77b4")
         .attr("r", 2.5)
         .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y(d.protein); });
+        .attr("cy", function(d) { return y(d.protein); })
+        .on('mouseover', function(d) {
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 1);
+          div
+            .html(d.protein.toFixed(1) + '%')
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px');
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr("r", 5);
+        })
+        .on('mouseout', function(d) {
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0);
+          d3.select(this)
+            .transition()
+            .duration(500)
+            .attr("r", 2.5);
+        })
+        .on('mousemove', function(d) {
+          div
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px')
+        });
 
       svg.selectAll("dot")
         .data(data)
@@ -346,7 +466,36 @@ class Dates extends Component {
         .style("fill", "#ff7f0e")
         .attr("r", 2.5)
         .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y(d.carbohydrates); });
+        .attr("cy", function(d) { return y(d.carbohydrates); })
+        .on('mouseover', function(d) {
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 1);
+          div
+            .html(d.carbohydrates.toFixed(1) + '%')
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px');
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr("r", 5);
+        })
+        .on('mouseout', function(d) {
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0);
+          d3.select(this)
+            .transition()
+            .duration(500)
+            .attr("r", 2.5);
+        })
+        .on('mousemove', function(d) {
+          div
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px')
+        });
 
       svg.selectAll("dot")
         .data(data)
@@ -354,7 +503,36 @@ class Dates extends Component {
         .style("fill", "#2ca02c")
         .attr("r", 2.5)
         .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y(d.fat); });
+        .attr("cy", function(d) { return y(d.fat); })
+        .on('mouseover', function(d) {
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 1);
+          div
+            .html(d.fat.toFixed(1) + '%')
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px');
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr("r", 5);
+        })
+        .on('mouseout', function(d) {
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0);
+          d3.select(this)
+            .transition()
+            .duration(500)
+            .attr("r", 2.5);
+        })
+        .on('mousemove', function(d) {
+          div
+            .style('left', d3.event.layerX + 20 + 'px')
+            .style('top', d3.event.layerY - 10 + 'px')
+        });
 
     }
 
